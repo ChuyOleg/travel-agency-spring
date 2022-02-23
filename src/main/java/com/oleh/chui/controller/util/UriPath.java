@@ -15,5 +15,7 @@ public class UriPath {
     public static final String TOUR_CREATE = "/tour/create";
     public static final String TOUR_UPDATE = "/tour/update";
 
+    public static final String LOGIN = "/login";
+
     public static final String CATALOG = "/catalog";
 }

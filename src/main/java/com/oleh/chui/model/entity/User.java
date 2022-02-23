@@ -1,9 +1,14 @@
 package com.oleh.chui.model.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
@@ -14,7 +19,7 @@ import java.math.BigDecimal;
 @Setter
 @ToString
 @EqualsAndHashCode(of = {"username", "password"})
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id")
@@ -54,4 +59,28 @@ public class User {
     @Column(name = "is_blocked")
     private boolean blocked;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(role.getValue().name()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !blocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
