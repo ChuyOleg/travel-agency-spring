@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 mt-4 mb-4 p-3 justify-content-center tour-creation-block">
+            <form class="form" th:action="@{/admin/tour/update/{id}(id=${id})}" method="post" th:object="${tourDto}" novalidate autocomplete="off">
+                <h3 class="text-center mt-2" th:text="#{updateTourPage.title}"></h3>
+
+                <div class="row justify-content-center">
+                    <div class="text-center col-10">
+                        <h3><label for="name" th:text="*{name}"></label></h3>
+                        <input type="text" th:field="*{name}" id="name" hidden>
+                    </div>
+
+                    <div class="text-center col-4">
+                        <label for="price" th:text="#{tour.info.price} + ':'"></label><br>
+                        <input type="text" th:field="*{price}" id="price" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('price')}"
+                           th:text="#{createTourPage.exception.priceIsNotValidException}">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-4 text-center">
+                        <label for="country" th:text="#{tour.info.country} + ':'"></label><br>
+                        <input type="text" th:field="*{country}" id="country" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('country')}"
+                           th:text="#{createTourPage.exception.countryIsEmptyException}">
+                        </p>
+                        <p class="error-message text-center" th:if="${countryIsUndefined}"
+                           th:text="#{createTourPage.exception.countryIsUndefined}">
+                        </p>
+                    </div>
+
+                    <div class="col-4 text-center">
+                        <label for="city" th:text="#{tour.info.city} + ':'"></label><br>
+                        <input type="text" th:field="*{city}" id="city" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('city')}"
+                           th:text="#{createTourPage.exception.cityIsEmptyException}">
+                        </p>
+                        <p class="error-message text-center" th:if="${cityIsUndefined}"
+                           th:text="#{createTourPage.exception.cityIsUndefined}">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <label for="description" th:text="#{tour.info.description} + ':'"></label><br>
+                    <textarea name="description" th:field="*{description}" id="description" class="form-control">
+                    </textarea>
+
+                    <p class="error-message text-center" th:if="${#fields.hasErrors('description')}"
+                       th:text="#{createTourPage.exception.descriptionIsEmptyException}">
+                    </p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-3 text-center">
+                        <label for="maxDiscount" th:text="#{tour.info.maxDiscount} + ':'"></label><br>
+                        <input type="text" th:field="*{maxDiscount}" id="maxDiscount" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('maxDiscount')}"
+                           th:text="#{createTourPage.exception.maxDiscountIsNotValidException}">
+                        </p>
+                    </div>
+
+                    <div class="col-3 text-center">
+                        <label for="discountStep" th:text="#{tour.info.discountStep} + ':'"></label><br>
+                        <input type="text" th:field="*{discountStep}" id="discountStep" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('discountStep')}"
+                           th:text="#{createTourPage.exception.discountStepIsNotValidException}">
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-3 text-center">
+                        <label for="tourType" th:text="#{tour.info.tourType} + ':'"></label><br>
+                        <select class="form-select" th:field="*{tourType}" id="tourType">
+                            <option value="" hidden></option>
+
+                            <option th:each="tourTypeEnum : ${tourTypeList}" th:value="${tourTypeEnum}"
+                                    th:text="#{${'tourType.' + tourTypeEnum}}"
+                            ></option>
+                        </select>
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('tourType')}"
+                           th:text="#{createTourPage.exception.tourTypeIsEmptyException}">
+                        </p>
+                    </div>
+
+                    <div class="col-3 text-center">
+                        <label for="hotelType" th:text="#{tour.info.hotelType} + ':'"></label><br>
+                        <select class="form-select" th:field="*{hotelType}" id="hotelType">
+                            <option value="" hidden></option>
+
+                            <option th:each="hotelTypeEnum : ${hotelTypeList}" th:value="${hotelTypeEnum}"
+                                    th:text="#{${'hotelType.' + hotelTypeEnum.name()}}">
+                            </option>
+                        </select>
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('hotelType')}"
+                           th:text="#{createTourPage.exception.hotelTypeIsEmptyException}">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <label for="personNumber" th:text="#{tour.info.personNumber} + ':'"></label><br>
+                        <input type="text" th:field="*{personNumber}" id="personNumber" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('personNumber')}"
+                           th:text="#{createTourPage.exception.personNumberIsNotValidException}">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-2">
+                    <div class="text-center col-4">
+                        <label for="startDate" th:text="#{tour.info.startDate} + ':'"></label><br>
+                        <input type="date" th:field="*{startDate}" id="startDate" class="form-control">
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('startDate')}"
+                           th:text="#{createTourPage.exception.startDateIsNotValidException}">
+                        </p>
+                    </div>
+
+                    <div class="text-center col-4">
+                        <label for="endDate" th:text="#{tour.info.endDate} + ':'"></label><br>
+                        <input type="date" th:field="*{endDate}" id="endDate" class="form-control">
+
+
+                        <p class="error-message text-center" th:if="${#fields.hasErrors('endDate') || invalidEndDate == true}"
+                           th:text="#{createTourPage.exception.endDateIsNotValidException}">
+                        </p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-2">
+                    <label for="isBurning" th:text="#{tour.info.isBurning} + ':'"></label><br>
+                    <input type="checkbox" th:field="*{burning}" th:value="on" id="isBurning">
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" th:text="#{updateButton}">
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+

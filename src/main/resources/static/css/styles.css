@@ -1,0 +1,276 @@
+body {
+    height:100vh;
+    min-height: 100%;
+    margin:0;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.error-message {
+    font-weight: bold;
+    color: red;
+}
+
+/******************************************/
+/************* LOGIN PAGE *****************/
+/******************************************/
+
+.login-form {
+    border: 2px solid black;
+    box-shadow: 0 0 5px 1px black;
+}
+
+/******************************************/
+/********** REGISTRATION PAGE *************/
+/******************************************/
+
+.registration-form {
+    border: 2px solid black;
+    box-shadow: 0 0 5px 1px black;
+}
+
+/******************************************/
+/************* CATALOG PAGE ***************/
+/******************************************/
+
+.tour-name {
+    border-bottom: 3px solid #3a763f;
+    font-style: italic;
+}
+
+.filter-block {
+    border: 2px solid black;
+}
+
+.tour-block {
+    border: 2px solid black;
+    box-shadow: 0 0 5px 1px black;
+}
+
+.tour-burning-true {
+    border: 5px solid orange;
+    box-shadow: 0 0 5px 1px orange;
+}
+
+.tour-date {
+    font-weight: bold;
+}
+
+.tour-nights {
+    font-weight: bold;
+}
+
+.pagination-list li {
+    display: inline-block;
+    list-style-type: none;
+}
+
+.pagination-list .pageNumber {
+    background: #ebd9df;
+    width: 40px;
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+/******************************************/
+/*********** ACCOUNT PAGE *****************/
+/******************************************/
+
+.user-info-cell {
+    border: 2px solid black;
+    font-weight: bold;
+}
+
+.tour-status-CANCELED {
+    border: 2px solid red;
+    box-shadow: 0 0 5px 1px red;
+}
+
+.tour-status-PAID {
+    border: 2px solid green;
+    box-shadow: 0 0 5px 1px green;
+}
+
+/******************************************/
+/********** TOUR CREATION PAGE ************/
+/******************************************/
+
+.tour-creation-block {
+    border: 2px solid black;
+    box-shadow: 0 0 5px 1px black;
+    background: #ebe9e9;
+}
+
+/******************************************/
+/****** USERS PAGE (block | unblock) ******/
+/******************************************/
+
+.user-block-header div {
+    border: 2px solid black;
+    font-weight: bold;
+    background: #acd78b;
+}
+
+.user-field {
+    border: 2px solid black;
+    font-weight: bold;
+}
+
+.blocked-true div {
+    font-weight: bold;
+    color: red;
+}
+
+/******************************************/
+/******* LANGUAGE DROP DOWN LIST **********/
+/******************************************/
+
+.language-buttons {
+    min-width: 100%;
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.language-dropdown-wrapper:hover .language-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.language-dropdown-wrapper {
+    background: cornflowerblue;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+}
+
+.language-header {
+    font-weight: bold;
+    font-style: italic;
+    line-height: 50px;
+}
+
+.language-button {
+    min-width: 100%;
+    height: 40px;
+    background-size: cover;
+}
+
+#englishLanguageButton {
+    background-image: url("/static/img/uk_flag.png");
+    font-size: 0;
+    border: 2px solid black;
+}
+
+#englishLanguageButton:hover {
+    border: 4px solid black;
+}
+
+#ukrainianLanguageButton {
+    background-image: url("/static/img/ua_flag.png");
+    font-size: 0;
+    border: 2px solid black;
+}
+
+#ukrainianLanguageButton:hover {
+    border: 4px solid black;
+}
+
+/******************************************/
+/************** HEADER ********************/
+/******************************************/
+
+.header {
+    background: #ebe9e9;
+    height: 50px;
+}
+
+.header-block a {
+    display: inline-block;
+    width: 100%;
+    height: 50px;
+    line-height: 46px;
+    border: 2px solid black;
+    font-weight: bold;
+    color: black;
+    background: #ebd9df;
+}
+
+.header-block a:hover {
+    color: black;
+    background: skyblue;
+}
+
+.login-logout-block {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: skyblue;
+}
+
+.login-logout-block a {
+    display: inline-block;
+    font-weight: bold;
+    height: 50px;
+    line-height: 46px;
+    width: 100px;
+    border: 2px solid black;
+    color: black;
+    vertical-align: middle;
+}
+
+.login-logout-block a:hover {
+    display: inline-block;
+    height: 50px;
+    width: 100px;
+    border: 2px solid black;
+    color: black;
+}
+
+.login-block a {
+    background: #c3ffac;
+}
+
+.login-block a:hover {
+    background: limegreen;
+}
+
+.logout-block a {
+    background: #ffafa3;
+}
+
+.logout-block a:hover {
+    background: red;
+}
+
+/******************************************/
+/************** FOOTER ********************/
+/******************************************/
+
+footer.page-footer {
+    background: #221921;
+    height: 6.8vh;
+    padding-top: 1.6vh;
+    padding-bottom: 1.6vh;
+    margin-top: auto;
+}
+
+footer.page-footer a {
+    text-decoration: none;
+    font-weight: bold;
+    color: navajowhite;
+}
+
+footer .footer-copyright {
+    color: #198754;
+}
