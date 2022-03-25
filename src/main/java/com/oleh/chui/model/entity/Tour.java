@@ -43,7 +43,7 @@ public class Tour {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "max_discount")

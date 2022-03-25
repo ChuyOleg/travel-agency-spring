@@ -15,17 +15,11 @@
     <div class="row">
         <h2 class="text-center" th:text="#{catalogPage.title}"></h2>
 
-<!--        <c:if test="${requestScope.invalidPersonNumber}">-->
-<!--            <p class="text-center error-message"><fmt:message key="catalogPage.exception.personNumber" /></p>-->
-<!--        </c:if>-->
+        <p th:if="${invalidPersonNumber }" class="text-center error-message" th:text="#{catalogPage.exception.personNumber}"/>
 
-<!--        <c:if test="${requestScope.invalidMinPrice}">-->
-<!--            <p class="text-center error-message"><fmt:message key="catalogPage.exception.minPrice" /></p>-->
-<!--        </c:if>-->
+        <p th:if="${invalidMinPrice}" class="text-center error-message" th:text="#{catalogPage.exception.minPrice}"/>
 
-<!--        <c:if test="${requestScope.invalidMaxPrice}">-->
-<!--            <p class="text-center error-message"><fmt:message key="catalogPage.exception.maxPrice" /></p>-->
-<!--        </c:if>-->
+        <p th:if="${invalidMaxPrice}" class="text-center error-message" th:text="#{catalogPage.exception.maxPrice}"/>
 
         <div class="col-5 col-lg-3">
 
@@ -38,11 +32,11 @@
                         <span th:each="tourType : ${tourTypeList}">
                             <div class="row mt-2">
                                 <label class="col-8" th:for="${tourType.name()}" th:text="#{${'tourType.' + tourType.name}}"></label>
-                                <div class="col-4" th:if="${#vars[tourType.name()]}">
-                                    <input class="col-4" type="checkbox" checked name="hotelType" th:value="${tourType.name()}" th:id="${tourType.name()}">
+                                <div class="col-4" th:if="${checkedTourTypeList != null && checkedTourTypeList.contains(tourType.name())}">
+                                    <input class="col-4" type="checkbox" checked name="tourType" th:value="${tourType.name()}" th:id="${tourType.name()}">
                                 </div>
-                                <div class="col-4" th:unless="${#vars[tourType.name()]}">
-                                    <input class="col-4" type="checkbox" name="hotelType" th:value="${tourType.name()}" th:id="${tourType.name()}">
+                                <div class="col-4" th:unless="${checkedTourTypeList != null && checkedTourTypeList.contains(tourType.name())}">
+                                    <input class="col-4" type="checkbox" name="tourType" th:value="${tourType.name()}" th:id="${tourType.name()}">
                                 </div>
                             </div>
                         </span>
@@ -53,10 +47,10 @@
                         <span th:each="hotelType : ${hotelTypeList}">
                             <div class="row mt-2">
                                 <label class="col-8" th:for="${hotelType.name()}" th:text="#{${'hotelType.' + hotelType.name()}}"></label>
-                                <div class="col-4" th:if="${#vars[hotelType.name()]}">
+                                <div class="col-4" th:if="${checkedHotelTypeList != null && checkedHotelTypeList.contains(hotelType.name())}">
                                     <input  type="checkbox" checked name="hotelType" th:value="${hotelType.name()}" th:id="${hotelType.name()}">
                                 </div>
-                                <div class="col-3" th:unless="${#vars[hotelType.name()]}">
+                                <div class="col-3" th:unless="${checkedHotelTypeList != null && checkedHotelTypeList.contains(hotelType.name())}">
                                     <input type="checkbox" name="hotelType" th:value="${hotelType.name()}" th:id="${hotelType.name()}">
                                 </div>
                             </div>
@@ -82,7 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-2">
+                    <div class="text-center mt-2 mb-2">
                         <button class="btn btn-primary" type="submit" th:text="#{filterButton}"></button>
                     </div>
                 </form>
@@ -108,7 +102,7 @@
 
             <div th:each="tour : ${tourList}">
                 <div class="tour-wrapper justify-content-center mb-5">
-                    <div class="tour-block tour-burning-${tour.burning} text-center">
+                    <div th:class="${'tour-block text-center tour-burning-' + tour.burning}">
                         <h3 class="text-center tour-name pt-2 pb-2" th:text="${tour.name}"></h3>
 
                         <div class="row justify-content-center">
@@ -135,8 +129,8 @@
 
                     </div>
 
-                    <form class="text-center" method="get" action="/tour/details">
-                        <input type="text" name="id" value="${tour.id}" hidden>
+                    <form class="text-center" method="get" th:action="@{/tour/details}">
+                        <input type="text" name="id" th:value="${tour.id}" hidden>
                         <button class="btn btn-primary" type="submit" th:text="#{seeDetailsButton}"></button>
                     </form>
                 </div>

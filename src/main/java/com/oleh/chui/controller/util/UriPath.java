@@ -4,8 +4,6 @@ public class UriPath {
 
     private UriPath() {}
 
-    public static final String ID_PATH_VARIABLE = "";
-
     public static final String REDIRECT = "redirect:";
     public static final String USER_PREFIX = "/user";
     public static final String MANAGER_PREFIX = "/manager";
@@ -14,8 +12,9 @@ public class UriPath {
     public static final String TOUR = "/tour";
     public static final String TOUR_CREATE = "/tour/create";
     public static final String TOUR_UPDATE = "/tour/update";
+    public static final String TOUR_DETAILS = "/tour/details";
 
     public static final String LOGIN = "/login";
-
+    public static final String REGISTRATION = "/registration";
     public static final String CATALOG = "/catalog";
 }

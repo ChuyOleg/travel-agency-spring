@@ -15,6 +15,10 @@ import java.util.Locale;
 @Configuration
 public class LocalizationConfig implements WebMvcConfigurer {
 
+    private static final String LANG_PARAM_NAME = "lang";
+    private static final String BASENAME = "classpath:messages";
+    private static final String ENCODING = "UTF-8";
+
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
@@ -25,7 +29,7 @@ public class LocalizationConfig implements WebMvcConfigurer {
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-        localeChangeInterceptor.setParamName("lang");
+        localeChangeInterceptor.setParamName(LANG_PARAM_NAME);
         return localeChangeInterceptor;
     }
 
@@ -39,8 +43,8 @@ public class LocalizationConfig implements WebMvcConfigurer {
         ReloadableResourceBundleMessageSource messageSource
                 = new ReloadableResourceBundleMessageSource();
 
-        messageSource.setBasename("classpath:messages");
-        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setBasename(BASENAME);
+        messageSource.setDefaultEncoding(ENCODING);
         return messageSource;
     }
 

@@ -7,12 +7,18 @@ import com.oleh.chui.model.entity.TourType;
 import com.oleh.chui.model.exception.city.CityNotExistException;
 import com.oleh.chui.model.exception.country.CountryNotExistException;
 import com.oleh.chui.model.exception.tour.TourNameIsReservedException;
+import com.oleh.chui.model.service.util.filter.SearchCriteria;
+import com.oleh.chui.model.service.util.filter.SearchOperation;
 import com.oleh.chui.model.repository.TourRepository;
+import com.oleh.chui.model.service.util.filter.TourSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,28 +69,75 @@ public class TourService {
         }
     }
 
+    public List<Tour> getPageBySpecification(TourSpecification specification, int uiPageNumber, int pageSize) {
+        final int dbPageNumber = uiPageNumber - 1;
+        Pageable pageRequestWithBurningFirst = PageRequest.of(dbPageNumber, pageSize, Sort.by("burning").descending());
 
-    public List<Tour> getAllUsingFilter(
-            Optional<String> personNumberString,
-            Optional<String> minPriceString,
-            Optional<String> maxPriceString,
-            Optional<String[]> tourTypeArrOptional,
-            Optional<String[]> hotelTypeArrOptional) {
-
-        Set<TourType> tourTypeArr = tourTypeArrOptional.map(strings -> Arrays.stream(strings)
-                .map(tourType -> TourType.builder().value(TourType.TourTypeEnum.valueOf(tourType)).build())
-                .collect(Collectors.toSet())).orElseGet(HashSet::new);
-
-        Set<HotelType> hotelTypeArr = hotelTypeArrOptional.map(strings -> Arrays.stream(strings)
-                .map(hotelType -> HotelType.builder().value(HotelType.HotelTypeEnum.valueOf(hotelType)).build())
-                .collect(Collectors.toSet())).orElseGet(HashSet::new);
-
-        return tourRepository.findAllByPersonNumberAndPriceGreaterThanEqualAndPriceLessThanEqualAndTourTypeInAndHotelTypeIn(
-                Integer.parseInt(personNumberString.orElse("2")),
-                BigDecimal.valueOf(Double.parseDouble(minPriceString.orElse("0"))),
-                BigDecimal.valueOf(Double.parseDouble(maxPriceString.orElse("10000000"))),
-                tourTypeArr,
-                hotelTypeArr
-        );
+        return tourRepository.findAll(specification, pageRequestWithBurningFirst).toList();
     }
+
+    public int getPagesCountBySpecification(TourSpecification specification, int pageSize) {
+        final long toursCount = tourRepository.count(specification);
+
+        return (int) Math.ceil((double) toursCount / pageSize);
+    }
+
+    public TourSpecification buildSpecification(String personNumber,
+                                                String minPrice,
+                                                String maxPrice,
+                                                String[] tourTypeArray,
+                                                String[] hotelTypeArray) {
+
+        TourSpecification tourSpecification = new TourSpecification();
+        tourSpecification.add(new SearchCriteria("startDate", LocalDate.now(), SearchOperation.DATE_AFTER_THAN));
+
+        if (personNumber != null && !personNumber.isEmpty()) {
+            tourSpecification.add(new SearchCriteria("personNumber", personNumber, SearchOperation.EQUAL));
+        }
+        if (minPrice != null && !minPrice.isEmpty()) {
+            tourSpecification.add(new SearchCriteria("price", minPrice, SearchOperation.GREATER_THAN_EQUAL));
+        }
+        if (maxPrice != null && !maxPrice.isEmpty()) {
+            tourSpecification.add(new SearchCriteria("price", maxPrice, SearchOperation.LESS_THAN_EQUAL));
+        }
+        if (tourTypeArray != null) {
+            List<TourType.TourTypeEnum> tourTypeEnumList = Arrays.stream(tourTypeArray)
+                    .map(TourType.TourTypeEnum::valueOf)
+                    .collect(Collectors.toList());
+            tourSpecification.add(new SearchCriteria("tourType", tourTypeEnumList, SearchOperation.IN, "value"));
+        }
+        if (hotelTypeArray != null) {
+            List<HotelType.HotelTypeEnum> hotelTypeEnumList = Arrays.stream(hotelTypeArray)
+                    .map(HotelType.HotelTypeEnum::valueOf)
+                    .collect(Collectors.toList());
+            tourSpecification.add(new SearchCriteria("hotelType", hotelTypeEnumList, SearchOperation.IN, "value"));
+        }
+
+        return tourSpecification;
+    }
+
+    // TODO: add Transactional
+//    public List<Tour> getAllUsingFilter(
+//            Optional<String> personNumberString,
+//            Optional<String> minPriceString,
+//            Optional<String> maxPriceString,
+//            Optional<String[]> tourTypeArrOptional,
+//            Optional<String[]> hotelTypeArrOptional) {
+//
+//        Set<TourType> tourTypeArr = tourTypeArrOptional.map(strings -> Arrays.stream(strings)
+//                .map(tourType -> TourType.builder().value(TourType.TourTypeEnum.valueOf(tourType)).build())
+//                .collect(Collectors.toSet())).orElseGet(HashSet::new);
+//
+//        Set<HotelType> hotelTypeArr = hotelTypeArrOptional.map(strings -> Arrays.stream(strings)
+//                .map(hotelType -> HotelType.builder().value(HotelType.HotelTypeEnum.valueOf(hotelType)).build())
+//                .collect(Collectors.toSet())).orElseGet(HashSet::new);
+//
+//        return tourRepository.findAllByPersonNumberAndPriceGreaterThanEqualAndPriceLessThanEqualAndTourTypeInAndHotelTypeIn(
+//                Integer.parseInt(personNumberString.orElse("2")),
+//                BigDecimal.valueOf(Double.parseDouble(minPriceString.orElse("0"))),
+//                BigDecimal.valueOf(Double.parseDouble(maxPriceString.orElse("10000000"))),
+//                tourTypeArr,
+//                hotelTypeArr
+//        );
+//    }
 }
