@@ -54,15 +54,15 @@ public class TourDto {
     @NotNull
     @Min(value = PERSON_NUMBER_MIN)
     @Max(value = PERSON_NUMBER_MAX)
-    private int personNumber = 1;
+    private int personNumber = PERSON_NUMBER_DEFAULT_VALUE;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = DATE_PATTERN)
     @Future
     private LocalDate startDate;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = DATE_PATTERN)
     private LocalDate endDate;
 
     private String burning;
@@ -80,7 +80,7 @@ public class TourDto {
         this.personNumber = tour.getPersonNumber();
         this.startDate = tour.getStartDate();
         this.endDate = tour.getEndDate();
-        this.burning = tour.isBurning() ? "on" : null;
+        this.burning = tour.isBurning() ? IS_BURNING_TRUE_VALUE : null;
     }
 
 }

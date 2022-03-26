@@ -23,8 +23,6 @@
                     </div>
 
                     <div class="mb-3 text-center" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-                        <span th:text="${errorMsg}"></span>
-
                         <p class="text-center error-message mt-3" th:if="${errorMsg.equals('User account is locked')}" th:text="#{loginPage.exception.accountIsBlocked}"></p>
                         <p class="text-center error-message mt-3" th:if="${errorMsg.equals('Bad credentials')}" th:text="#{loginPage.exception.authentication}"></p>
                     </div>
@@ -49,6 +47,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="partial/footer"></div>
 
 </body>
 </html>

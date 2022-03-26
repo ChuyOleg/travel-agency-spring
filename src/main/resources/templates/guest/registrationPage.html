@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
+
+<div id="registration">
+    <div class="container">
+        <div id="registration-row" class="row justify-content-center align-items-center mt-4 mb-5">
+            <div class="col-10 col-lg-6 p-4 registration-form">
+                <form th:action="@{/registration}" method="post" autocomplete="off" th:object="${userDto}">
+                    <h3 class="text-center mt-3" th:text="#{registrationPage.title}"></h3>
+
+                    <div class="form-group">
+                        <label for="username" th:text="#{registrationPage.username} + ':'"></label><br>
+                        <input type="text" th:field="*{username}" id="username" maxlength="64" class="form-control">
+                    </div>
+
+                    <p class="error-message" th:if="${#fields.hasErrors('username')}"
+                        th:text="#{registrationPage.exception.usernameSizeOutOfBounds}">
+                    </p>
+
+                    <p class="error-message" th:if="${usernameIsReserved}"
+                        th:text="#{registrationPage.exception.usernameIsReserved}">
+                    </p>
+
+                    <div class="form-group" th:with="errorMsg=${#fields}">
+                        <label for="password" th:text="#{registrationPage.password} + ':'"></label><br>
+                        <input type="password" th:field="*{password}" id="password" maxlength="64" class="form-control">
+                    </div>
+
+                    <p th:if="${#fields.errors('password').contains('isBlank') || #fields.errors('password').contains('sizeOutOfBounds')}"
+                       th:text="#{registrationPage.exception.passwordSizeOutOfBounds}" class="error-message">
+                    </p>
+
+                    <p th:if="${#fields.errors('password').contains('passwordNotMatchTemplate')}"
+                        th:text="#{registrationPage.exception.passwordNotMatchTemplate}" class="error-message">
+                    </p>
+
+                    <div class="form-group">
+                        <label for="passwordCopy" th:text="#{registrationPage.confirmPassword} + ':'"></label><br>
+                        <input type="password" th:field="*{passwordCopy}" id="passwordCopy" class="form-control">
+                    </div>
+
+                    <p class="error-message" th:if="${#fields.hasErrors('passwordCopy')}"
+                        th:text="#{registrationPage.exception.passwordsNotMatch}">
+                    </p>
+
+                    <div class="form-group">
+                        <label for="firstName" th:text="#{registrationPage.firstName} + ':'"></label><br>
+                        <input type="text" th:field="*{firstName}" id="firstName" maxlength="32" class="form-control">
+                    </div>
+
+                    <p class="error-message" th:if="${#fields.hasErrors('firstName')}"
+                        th:text="#{registrationPage.exception.firstNameSizeOutOfBounds}">
+                    </p>
+
+                    <div class="form-group">
+                        <label for="lastName" th:text="#{registrationPage.lastName} + ':'"></label><br>
+                        <input type="text" th:field="*{lastName}" id="lastName" maxlength="32" class="form-control">
+                    </div>
+
+                    <p class="error-message" th:if="${#fields.hasErrors('lastName')}"
+                        th:text="#{registrationPage.exception.lastNameSizeOutOfBounds}">
+                    </p>
+
+                    <div class="form-group">
+                        <label for="email" th:text="#{registrationPage.email} + ':'"></label><br>
+                        <input type="text" th:field="*{email}" id="email" maxlength="128" class="form-control">
+                    </div>
+
+                    <p class="error-message" th:if="${#fields.hasErrors('email')}"
+                        th:text="#{registrationPage.exception.emailSizeOutOfBounds} + '. ' + #{registrationPage.exception.emailNotMatchTemplate}">
+                    </p>
+
+                    <div class="form-text text-center mt-4 mb-2">
+                        <span th:text="#{registrationPage.alreadyHaveAnAccount}"></span> <a th:href="@{/login}" th:text="#{registrationPage.signIn}"></a>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary" th:text="#{registrationPage.signUpButton}"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="partial/footer"></div>
 
 </body>
 </html>

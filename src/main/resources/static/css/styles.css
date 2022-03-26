@@ -167,7 +167,7 @@ a {
 }
 
 #englishLanguageButton {
-    background-image: url("/static/img/uk_flag.png");
+    background-image: url("../img/uk_flag.png");
     font-size: 0;
     border: 2px solid black;
 }
@@ -177,7 +177,7 @@ a {
 }
 
 #ukrainianLanguageButton {
-    background-image: url("/static/img/ua_flag.png");
+    background-image: url("../img/ua_flag.png");
     font-size: 0;
     border: 2px solid black;
 }

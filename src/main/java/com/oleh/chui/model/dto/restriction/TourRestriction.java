@@ -13,8 +13,12 @@ public class TourRestriction {
     public static final int DISCOUNT_STEP_MIN = 0;
     public static final int DISCOUNT_STEP_MAX = 50;
 
+    public static final int PERSON_NUMBER_DEFAULT_VALUE = 1;
     public static final int PERSON_NUMBER_MIN = 1;
     public static final int PERSON_NUMBER_MAX = 50;
 
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+
+    public static final String IS_BURNING_TRUE_VALUE = "on";
 
 }

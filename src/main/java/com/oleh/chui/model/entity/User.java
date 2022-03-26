@@ -1,5 +1,6 @@
 package com.oleh.chui.model.entity;
 
+import com.oleh.chui.model.dto.UserDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -83,4 +84,14 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public User(UserDto userDto) {
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
+        this.firstName = userDto.getFirstName();
+        this.lastName = userDto.getLastName();
+        this.email = userDto.getEmail();
+        this.role = new Role(Role.RoleEnum.USER);
+    }
+
 }

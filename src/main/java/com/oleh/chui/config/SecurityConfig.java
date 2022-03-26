@@ -1,9 +1,10 @@
 package com.oleh.chui.config;
 
+import com.oleh.chui.model.entity.Role;
 import com.oleh.chui.model.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,10 +15,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final static int PASSWORD_ENCODER_STRENGTH = 8;
+
     private final UserService userService;
+
+    public SecurityConfig(@Lazy UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -26,19 +32,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder(8);
+        return new BCryptPasswordEncoder(PASSWORD_ENCODER_STRENGTH);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin").hasAuthority("ADMIN")
+                .antMatchers("/admin/**").hasAuthority(Role.RoleEnum.ADMIN.name())
+                .antMatchers("/manager/**").hasAuthority(Role.RoleEnum.MANAGER.name())
+                .antMatchers("/user/**").hasAuthority(Role.RoleEnum.USER.name())
+                .antMatchers("/**").permitAll()
                 .and()
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/catalog")
-                        .loginPage("/login")
-                        .failureUrl("/login?error=true"))
-                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .formLogin()
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/catalog")
+                    .failureUrl("/login?error=true")
+                .and()
+                .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
                     .invalidateHttpSession(true);
     }

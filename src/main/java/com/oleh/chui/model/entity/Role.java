@@ -32,6 +32,10 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleEnum value;
 
+    public Role(RoleEnum roleEnum) {
+        this.value = roleEnum;
+    }
+
     public enum RoleEnum {
         UNKNOWN,
         USER,

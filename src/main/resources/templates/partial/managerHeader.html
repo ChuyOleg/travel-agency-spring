@@ -1,0 +1,20 @@
+<div class="container-fluid mb-3">
+
+  <div th:replace="partial/languageButtons"></div>
+
+  <div class="header-wrapper">
+    <div class="header row justify-content-center">
+      <div class="header-block text-center col-2">
+        <a th:href="@{/catalog}" th:text="#{header.catalog}"></a>
+      </div>
+      <div class="header-block text-center col-2">
+        <a th:href="@{/manager/users}" th:text="#{header.users}"></a>
+      </div>
+    </div>
+
+
+    <div class="login-logout-block logout-block text-center">
+      <a th:href="@{/logout}" class="align-middle" th:text="#{header.logout}"></a>
+    </div>
+  </div>
+</div>
