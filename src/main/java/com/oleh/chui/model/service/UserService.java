@@ -28,6 +28,10 @@ public class UserService implements UserDetailsService {
         return userOptional.orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
     public void registerNewAccount(UserDto userDto) throws UsernameIsReservedException {
         checkUsernameIsUnique(userDto.getUsername());
 

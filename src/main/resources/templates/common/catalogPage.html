@@ -131,10 +131,11 @@
 
                     </div>
 
-                    <form class="text-center" method="get" th:action="@{/tour/details}">
-                        <input type="text" name="id" th:value="${tour.id}" hidden>
-                        <button class="btn btn-primary" type="submit" th:text="#{seeDetailsButton}"></button>
-                    </form>
+                    <div class="text-center">
+                        <a class="btn btn-primary text-align" th:href="@{/tour/details/{id}(id=${tour.id})}"
+                           role="button" th:text="#{seeDetailsButton}"></a>
+                    </div>
+
                 </div>
             </div>
         </div>

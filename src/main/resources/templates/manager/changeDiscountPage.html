@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:replace="partial/header"></div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 mt-5 mb-4 p-3 justify-content-center tour-creation-block">
+            <form id="tour-form" autocomplete="off" class="form" th:action="@{/manager/tour/changeDiscount/{id}(id=${id})}" method="post" th:object="${tourDto}">
+
+                <h3 class="text-center mt-2" th:text="#{changeDiscountPage.title}"></h3>
+
+                <h3 class="text-center text-success" th:if="${discountHasBeenChanged}"
+                    th:text="#{changeDiscountPage.successMessage}">
+                </h3>
+
+                <p class="text-center error-message" th:if="${#fields.hasErrors('maxDiscount')}"
+                   th:text="#{createTourPage.exception.maxDiscountIsNotValidException}">
+                </p>
+
+                <p class="text-center error-message" th:if="${#fields.hasErrors('discountStep')}"
+                    th:text="#{createTourPage.exception.discountStepIsNotValidException}">
+                </p>
+
+                <div class="row justify-content-center">
+                    <div class="text-center col-10">
+                        <h3 th:text="*{name}"></h3>
+                        <input type="text" th:field="*{name}" hidden>
+                    </div>
+
+                    <div class="text-center col-4">
+                        <label for="price" th:text="#{tour.info.price} + ':'">:</label>
+                        <p th:text="*{price + '$'}"></p>
+                        <input type="text" th:field="*{price}" hidden id="price">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-4 text-center">
+                        <label for="country" th:text="#{tour.info.country} + ':'"></label><br>
+                        <p th:text="*{country}"></p>
+                        <input type="text" th:field="*{country}" hidden id="country">
+                    </div>
+
+                    <div class="col-4 text-center">
+                        <label for="city" th:text="#{tour.info.city} + ':'"></label><br>
+                        <p th:text="*{city}"></p>
+                        <input type="text" th:field="*{city}" hidden id="city">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-3 text-center">
+                        <label for="maxDiscount" th:text="#{tour.info.maxDiscount} + ':'"></label><br>
+                        <input type="text" th:field="*{maxDiscount}" id="maxDiscount" class="form-control">
+                    </div>
+
+                    <div class="col-3 text-center">
+                        <label for="discountStep" th:text="#{tour.info.discountStep} + ':'"></label><br>
+                        <input type="text" th:field="*{discountStep}" id="discountStep" class="form-control">
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary"
+                            th:text="#{updateDiscountButton}">
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="partial/footer"></div>
+
+</body>
+</html>

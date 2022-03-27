@@ -21,9 +21,6 @@ import static com.oleh.chui.model.dto.message.UserValidErrorMessage.*;
 @RequiredArgsConstructor
 public class RegistrationController {
 
-    private static final String USER_DTO_FIELD_PASSWORD = "password";
-    private static final String USER_DTO_FIELD_PASSWORD_COPY = "passwordCopy";
-
     private final UserService userService;
 
     @GetMapping(UriPath.REGISTRATION)
@@ -38,8 +35,10 @@ public class RegistrationController {
                                    BindingResult validationResult,
                                    Model model) {
 
-        if (!validationResult.hasFieldErrors(USER_DTO_FIELD_PASSWORD) && !userDto.getPassword().equals(userDto.getPasswordCopy())) {
-            validationResult.addError(new FieldError(UserDto.class.getName(), USER_DTO_FIELD_PASSWORD_COPY, USER_ERROR_PASSWORDS_NOT_MATCH));
+        if (!validationResult.hasFieldErrors(Attribute.USER_DTO_FIELD_PASSWORD) && !userDto.getPassword().equals(userDto.getPasswordCopy())) {
+            validationResult.addError(
+                    new FieldError(UserDto.class.getName(), Attribute.USER_DTO_FIELD_PASSWORD_COPY, USER_ERROR_PASSWORDS_NOT_MATCH)
+            );
         }
 
         if (!validationResult.hasErrors()) {

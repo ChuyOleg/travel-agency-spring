@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:replace="partial/header"></div>
+
+<div class="container">
+
+    <div class="text-center mt-4">
+        <h3 th:text="#{accountPage.greeting} + ', ' + ${user.username}"></h3>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-3 text-center user-info-cell p-2">
+            <p th:text="#{user.info.fullName}"></p>
+        </div>
+        <div class="col-3 text-center user-info-cell p-2">
+            <p th:text="#{user.info.email}"></p>
+        </div>
+        <div class="col-2 text-center user-info-cell p-2">
+            <p th:text="#{user.info.balance}"></p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-3 text-center user-info-cell p-2">
+            <p th:text="${user.firstName} + ' ' + ${user.lastName}"></p>
+        </div>
+        <div class="col-3 text-center user-info-cell p-2">
+            <p th:text="${user.email}"></p>
+        </div>
+        <div class="col-2 text-center user-info-cell p-2">
+            <p th:text="${user.money} + '$'"></p>
+        </div>
+    </div>
+
+    <h3 class="text-center mt-5 mb-3" th:text="#{accountPage.yourTours}"></h3>
+
+    <div class="row">
+        <div class="col-6 tour-wrapper justify-content-center mb-5" th:each="order : ${orderList}">
+            <div class="tour-block tour-status-${order.status.value.name()} text-center">
+                <h3 class="text-center tour-name pt-2 pb-2" th:text="${order.tour.name}"></h3>
+
+                <div class="row justify-content-center">
+                    <div class="col-2" th:text="#{tour.info.country}"></div>
+                    <div class="col-2" th:text="#{tour.info.city}"></div>
+                    <div class="col-2" th:text="#{order.info.finalPrice}"></div>
+                    <div class="col-3" th:text="#{order.info.registrationDate}"></div>
+                    <div class="col-3" th:text="#{order.info.status}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2" th:text="${order.tour.city.country.country}"></div>
+                    <div class="col-2" th:text="${order.tour.city.city}"></div>
+                    <div class="col-2" th:text="${order.finalPrice}"></div>
+                    <div class="col-3" th:text="${order.creationDate}"></div>
+                    <div class="col-3" th:text="#{'orderStatus.' + ${order.status.value.name()}}"></div>
+                </div>
+
+                <div class="row justify-content-center mt-4 mb-2">
+                    <div class="col-8 tour-date" th:text="${order.tour.startDate} + ' : ' + ${order.tour.endDate}"></div>
+                </div>
+
+            </div>
+
+            <div class="text-center">
+                <a class="btn btn-primary text-align" th:href="@{/tour/details/{id}(id=${order.tour.id})}"
+                   role="button" th:text="#{seeDetailsButton}"></a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="partial/footer"></div>
+
+</body>
+</html>

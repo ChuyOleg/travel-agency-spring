@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:replace="partial/header"></div>
+
+<div class="container">
+    <div class="row">
+
+        <h2 class="text-center" th:text="#{tourDetailsPage.title}"></h2>
+
+        <h3 class="text-center mt-4" th:if="${tourIsBought}" th:text="#{tourDetailsPage.alreadyBoughtMessage}"></h3>
+
+        <p th:if="${#authorization.expression('hasAuthority(''ADMIN'')') && param.error != null}"
+           class="text-center error-message mt-4" th:text="#{tourDetailsPage.cannotDeleteMessage}">
+
+        </p>
+
+        <div class="col-10 col-lg-10 offset-1">
+
+            <div class="tour-wrapper justify-content-center mt-4 mb-5">
+                <div th:class="'text-center tour-block tour-burning-' + ${tour.burning}">
+                    <h3 class="text-center tour-name pt-2 pb-2" th:text="${tour.name}"></h3>
+
+                    <div class="row justify-content-center">
+                        <div class="col-2" th:text="#{tour.info.country}"></div>
+                        <div class="col-2" th:text="#{tour.info.city}"></div>
+                        <div class="col-1" th:text="#{tour.info.price}"></div>
+                        <div class="col-3" th:text="#{tour.info.tourType}"></div>
+                        <div class="col-2" th:text="#{catalogPage.hotelStars}"></div>
+                        <div class="col-2" th:text="#{tour.info.persons}"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-2" th:text="${tour.city.country.country}"></div>
+                        <div class="col-2" th:text="${tour.city.city}"></div>
+                        <div class="col-1" th:text="${tour.price}"></div>
+                        <div class="col-3" th:text="#{${'tourType.' + tour.tourType.value}}"></div>
+                        <div class="col-2" th:text="#{${'hotelType.' + tour.hotelType.value}}"></div>
+                        <div class="col-2" th:text="${tour.personNumber}"></div>
+                    </div>
+
+                    <div class="row justify-content-center mt-4 mb-2">
+                        <div class="col-8 tour-date" th:text="${tour.startDate + ' : ' + tour.endDate}"></div>
+                    </div>
+
+                    <h3 class="mb-3" th:if="${finalPrice != null}" th:text="#{tourDetailsPage.yourPrice} + ' -> ' + ${finalPrice}"></h3>
+
+                </div>
+
+                <form th:if="${#authorization.expression('hasAuthority(''USER'')') && tourIsBought == null}"
+                      class="text-center" method="post" th:action="@{/user/tour/buy}">
+
+                        <input type="text" name="tourId" th:value="${tour.id}" hidden>
+                        <button class="btn btn-primary pe-4 ps-4" th:text="#{buyButton}"></button>
+                </form>
+
+                <h3 class="text-center mt-3" th:if="${#authorization.expression('hasAuthority(''ROLE_ANONYMOUS'')')}"
+                    th:text="#{tourDetailsPage.loginToBuyMessage}"></h3>
+
+
+                <form th:if="${#authorization.expression('hasAuthority(''MANAGER'')') || #authorization.expression('hasAuthority(''ADMIN'')')}"
+                        class="text-center mt-2 mb-2" method="post" th:action="@{/manager/tour/changeBurningState}">
+
+                    <input type="text" name="tourId" th:value="${tour.id}" hidden>
+
+                    <button th:if="${tour.burning}" type="submit" class="btn btn-primary pe-4 ps-4" th:text="#{makeNonBurningButton}"></button>
+                    <button th:unless="${tour.burning}" type="submit" class="btn btn-primary pe-4 ps-4" th:text="#{makeBurningButton}"></button>
+                </form>
+
+                <div class="text-center mt-2 mb-2">
+                    <a th:if="${#authorization.expression('hasAuthority(''MANAGER'')') || #authorization.expression('hasAuthority(''ADMIN'')')}"
+                       th:href="@{/manager/tour/changeDiscount/{id}(id=${tour.id})}" class="btn btn-primary" role="button"
+                       th:text="#{changeDiscountButton}">
+
+                    </a>
+                </div>
+
+                <div class="text-center mb-2 mt-2" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a th:href="@{/admin/tour/{id}(id=${tour.id})}" class="btn btn-primary mb-1 mt-1" role="button" th:text="#{updateButton}"></a>
+
+                    <form class="text-center" method="post" th:action="@{/admin/tour/delete}">
+                        <input type="text" name="tourId" th:value="${tour.id}" hidden>
+
+                        <button type="submit" class="btn btn-danger mb-1 mt-1" th:text="#{deleteButton}"></button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="partial/footer"></div>
+
+</body>
+</html>

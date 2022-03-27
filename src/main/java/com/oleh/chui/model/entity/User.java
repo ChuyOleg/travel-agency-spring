@@ -91,6 +91,7 @@ public class User implements UserDetails {
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
         this.email = userDto.getEmail();
+        this.money = new BigDecimal(0);
         this.role = new Role(Role.RoleEnum.USER);
     }
 

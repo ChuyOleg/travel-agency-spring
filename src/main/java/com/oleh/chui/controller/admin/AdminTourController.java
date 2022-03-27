@@ -9,6 +9,7 @@ import com.oleh.chui.model.entity.TourType;
 import com.oleh.chui.model.exception.city.CityNotExistException;
 import com.oleh.chui.model.exception.country.CountryNotExistException;
 import com.oleh.chui.model.exception.tour.TourNameIsReservedException;
+import com.oleh.chui.model.service.OrderService;
 import com.oleh.chui.model.service.TourService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 public class AdminTourController {
 
     private final TourService tourService;
+    private final OrderService orderService;
 
     @GetMapping(UriPath.TOUR_CREATE)
     public String getCreateTourPage(Model model) {
@@ -94,6 +96,19 @@ public class AdminTourController {
         insertTourTypesAndHotelTypesIntoModel(model);
         model.addAttribute(Attribute.ID, id);
         return HtmlPagePath.ADMIN_UPDATE_TOUR_PAGE;
+    }
+
+    @PostMapping(UriPath.TOUR_DELETE)
+    public String deleteTour(@RequestParam Long tourId) {
+        boolean tourIsAlreadyBought = orderService.isExistedByTourId(tourId);
+
+        if (tourIsAlreadyBought) {
+            return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId + Attribute.URL_ERROR_PARAMETER;
+        }
+
+        tourService.delete(tourId);
+
+        return UriPath.REDIRECT + UriPath.CATALOG;
     }
 
     private void insertTourTypesAndHotelTypesIntoModel(Model model) {

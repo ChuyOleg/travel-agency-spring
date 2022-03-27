@@ -32,6 +32,10 @@ public class TourService {
     private final TourTypeService tourTypeService;
     private final HotelTypeService hotelTypeService;
 
+    public Tour getById(Long id) {
+        return tourRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
     @Transactional
     public void create(TourDto tourDto) throws TourNameIsReservedException, CityNotExistException, CountryNotExistException {
         checkTourNameIsReserved(tourDto.getName());
@@ -57,21 +61,26 @@ public class TourService {
         tourRepository.save(tour);
     }
 
-    public Tour getById(Long id) {
-        return tourRepository.findById(id).orElseThrow(RuntimeException::new);
+    public void delete(Long id) {
+        tourRepository.deleteById(id);
     }
 
-    private void checkTourNameIsReserved(String name) throws TourNameIsReservedException {
-        Optional<Tour> optionalTour = tourRepository.findByName(name);
+    public void changeBurningState(Long id) {
+        Tour tour = getById(id);
+        tour.setBurning(!tour.isBurning());
+        tourRepository.save(tour);
+    }
 
-        if (optionalTour.isPresent()) {
-            throw new TourNameIsReservedException();
-        }
+    public void changeDiscount(TourDto tourDto, Long id) {
+        Tour tour = getById(id);
+        tour.setMaxDiscount(tourDto.getMaxDiscount());
+        tour.setDiscountStep(tourDto.getDiscountStep());
+        tourRepository.save(tour);
     }
 
     public List<Tour> getPageBySpecification(TourSpecification specification, int uiPageNumber, int pageSize) {
         final int dbPageNumber = uiPageNumber - 1;
-        Pageable pageRequestWithBurningFirst = PageRequest.of(dbPageNumber, pageSize, Sort.by("burning").descending());
+        Pageable pageRequestWithBurningFirst = PageRequest.of(dbPageNumber, pageSize, Sort.by("burning", "id").descending());
 
         return tourRepository.findAll(specification, pageRequestWithBurningFirst).toList();
     }
@@ -116,28 +125,11 @@ public class TourService {
         return tourSpecification;
     }
 
-    // TODO: add Transactional
-//    public List<Tour> getAllUsingFilter(
-//            Optional<String> personNumberString,
-//            Optional<String> minPriceString,
-//            Optional<String> maxPriceString,
-//            Optional<String[]> tourTypeArrOptional,
-//            Optional<String[]> hotelTypeArrOptional) {
-//
-//        Set<TourType> tourTypeArr = tourTypeArrOptional.map(strings -> Arrays.stream(strings)
-//                .map(tourType -> TourType.builder().value(TourType.TourTypeEnum.valueOf(tourType)).build())
-//                .collect(Collectors.toSet())).orElseGet(HashSet::new);
-//
-//        Set<HotelType> hotelTypeArr = hotelTypeArrOptional.map(strings -> Arrays.stream(strings)
-//                .map(hotelType -> HotelType.builder().value(HotelType.HotelTypeEnum.valueOf(hotelType)).build())
-//                .collect(Collectors.toSet())).orElseGet(HashSet::new);
-//
-//        return tourRepository.findAllByPersonNumberAndPriceGreaterThanEqualAndPriceLessThanEqualAndTourTypeInAndHotelTypeIn(
-//                Integer.parseInt(personNumberString.orElse("2")),
-//                BigDecimal.valueOf(Double.parseDouble(minPriceString.orElse("0"))),
-//                BigDecimal.valueOf(Double.parseDouble(maxPriceString.orElse("10000000"))),
-//                tourTypeArr,
-//                hotelTypeArr
-//        );
-//    }
+    private void checkTourNameIsReserved(String name) throws TourNameIsReservedException {
+        Optional<Tour> optionalTour = tourRepository.findByName(name);
+
+        if (optionalTour.isPresent()) {
+            throw new TourNameIsReservedException();
+        }
+    }
 }
