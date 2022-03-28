@@ -14,9 +14,13 @@ public class Attribute {
     public static final String HOTEL_TYPE_LIST = "hotelTypeList";
 
     public static final String USER = "user";
+    public static final String USER_ID = "userId";
+    public static final String USER_LIST = "userList";
     public static final String USER_DTO = "userDto";
     public static final String USER_DTO_FIELD_PASSWORD = "password";
     public static final String USER_DTO_FIELD_PASSWORD_COPY = "passwordCopy";
+
+    public static final String ORDER_ID = "orderId";
 
     public static final String URL_ERROR_PARAMETER = "?error";
 
@@ -31,5 +35,9 @@ public class Attribute {
     public static final String ORDER_LIST = "orderList";
 
     public static final String DISCOUNT_HAS_BEEN_CHANGES = "discountHasBeenChanged";
+
+    public static final String IS_BLOCKED = "isBlocked";
+
+    public static final String NEW_STATUS = "newStatus";
 
 }

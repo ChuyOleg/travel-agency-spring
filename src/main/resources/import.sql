@@ -41,6 +41,10 @@ INSERT INTO cities (city_id, city, country_id) VALUES ((SELECT nextval('city_seq
 
 INSERT INTO users (user_id, username, password, first_name, last_name, email, money, role_id, is_blocked) VALUES ((SELECT nextval('user_sequence')), 'User', '$2a$08$V9fGuOE9X11UmaVr0FR3Qu.T54EbaMnDxlsQAbnwaawJi0nFHXalO', 'Andrew', 'Gosenz', 'andrew.gosenz@gmail.com', 0, (SELECT role_id FROM roles WHERE role = 'USER'), false);
 -- password: User2002
+INSERT INTO users (user_id, username, password, first_name, last_name, email, money, role_id, is_blocked) VALUES ((SELECT nextval('user_sequence')), 'Karlo', '$2a$12$PZARDqfqZGsnoylgkh7/IeIQfNFgDB7om6Fka/RHMs2z9MwnqHxFW', 'Karlo', 'Velinni', 'karlo.velinni@gmail.com', 0, (SELECT role_id FROM roles WHERE role = 'USER'), false);
+-- password: Karlo2002
+INSERT INTO users (user_id, username, password, first_name, last_name, email, money, role_id, is_blocked) VALUES ((SELECT nextval('user_sequence')), 'Marko', '$2a$12$Nd9p3NuN8M71QlpWtb.djOkMfAQ2ZqHnIcFVqh2I4j8EBSJ3yxDSu', 'Marko', 'Kavelo', 'marko.kavelo@gmail.com', 0, (SELECT role_id FROM roles WHERE role = 'USER'), true);
+-- password: Marko2002
 INSERT INTO users (user_id, username, password, first_name, last_name, email, money, role_id, is_blocked) VALUES ((SELECT nextval('user_sequence')), 'Manager', '$2a$08$/Miy0aSM4kfE4e2GXOOab.qcjnFJTBk/vsmdOagU5WO94lfeKcKLq', 'Peter', 'Kolin', 'peter.kolin@gmail.com', 0, (SELECT role_id FROM roles WHERE role = 'MANAGER'), false);
 -- password: Manager2002
 INSERT INTO users (user_id, username, password, first_name, last_name, email, money, role_id, is_blocked) VALUES ((SELECT nextval('user_sequence')), 'Admin', '$2a$08$8IlYUUkkbhYdiNrZuiNVbuLmIq0eDmRnFXpUHFjtPSCqdWeGOCp86', 'Joe', 'Pistone', 'joe.pistone@gmail.com', 0, (SELECT role_id FROM roles WHERE role = 'ADMIN'), false);

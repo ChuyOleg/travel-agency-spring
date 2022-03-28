@@ -54,6 +54,16 @@ public class OrderService {
         return orderRepository.existsByTourId(tourId);
     }
 
+    public void changeStatus(String newStatus, Long orderId) {
+        Order order = orderRepository.getById(orderId);
+        Status.StatusEnum newStatusValue = Status.StatusEnum.valueOf(newStatus);
+        Status newStatusInstance = statusService.getByValue(newStatusValue);
+
+        order.setStatus(newStatusInstance);
+
+        orderRepository.save(order);
+    }
+
     public BigDecimal calculateFinalPrice(Long userId, Tour tour) {
         int ordersCount = findCountByUserId(userId);
 

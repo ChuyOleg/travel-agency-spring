@@ -17,7 +17,7 @@
 <div class="container">
 
     <div class="text-center mt-4">
-        <h3 th:text="#{accountPage.greeting} + ', ' + ${user.username}"></h3>
+        <h3 th:text="#{userAccountPage.user} + ': ' + ${user.username} + '(id=' + ${user.id} + ')'"></h3>
     </div>
 
     <div class="row justify-content-center mt-4">
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <h3 class="text-center mt-5 mb-3" th:text="#{accountPage.yourTours}"></h3>
+    <h3 class="text-center mt-5 mb-3" th:text="#{userAccountPage.tours}"></h3>
 
     <div class="row">
         <div class="col-6 tour-wrapper justify-content-center mb-5" th:each="order : ${orderList}">
@@ -73,9 +73,22 @@
 
             </div>
 
-            <div class="text-center">
-                <a class="btn btn-primary text-align" th:href="@{/tour/details/{id}(id=${order.tour.id})}"
-                   role="button" th:text="#{seeDetailsButton}"></a>
+            <div class="row justify-content-center" th:if="${order.status.value.name().equals('REGISTERED')}">
+                    <form class="text-center col-3" method="post" th:action="@{/manager/order/changeStatus}">
+                        <input type="text" name="orderId" th:value="${order.id}" hidden>
+                        <input type="text" name="userId" th:value="${user.id}" hidden>
+                        <input type="text" name="newStatus" th:value="'PAID'" hidden>
+
+                        <button class="btn btn-success form-control" type="submit" th:text="#{confirmButton}"></button>
+                    </form>
+
+                    <form class="text-center col-3" method="post" th:action="@{/manager/order/changeStatus}">
+                        <input type="text" name="orderId" th:value="${order.id}" hidden>
+                        <input type="text" name="userId" th:value="${user.id}" hidden>
+                        <input type="text" name="newStatus" th:value="'CANCELED'" hidden>
+
+                        <button class="btn btn-danger form-control" type="submit" th:text="#{cancelButton}"></button>
+                    </form>
             </div>
 
         </div>

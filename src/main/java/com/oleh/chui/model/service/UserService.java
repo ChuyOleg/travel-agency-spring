@@ -1,6 +1,7 @@
 package com.oleh.chui.model.service;
 
 import com.oleh.chui.model.dto.UserDto;
+import com.oleh.chui.model.entity.Role;
 import com.oleh.chui.model.entity.User;
 import com.oleh.chui.model.exception.user.UsernameIsReservedException;
 import com.oleh.chui.model.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +30,10 @@ public class UserService implements UserDetailsService {
         return userOptional.orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAllByRoleValue(Role.RoleEnum.USER);
+    }
+
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(RuntimeException::new);
     }
@@ -39,6 +45,18 @@ public class UserService implements UserDetailsService {
         user.setRole(roleService.findByValue(user.getRole().getValue()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        userRepository.save(user);
+    }
+
+    public void blockById(Long id) {
+        User user = userRepository.getById(id);
+        user.setBlocked(true);
+        userRepository.save(user);
+    }
+
+    public void unblockById(Long id) {
+        User user = userRepository.getById(id);
+        user.setBlocked(false);
         userRepository.save(user);
     }
 

@@ -19,6 +19,8 @@ public class HtmlPagePath {
     public static final String USER_ACCOUNT_PAGE = USER_PREFIX + "/accountPage";
 
     public static final String MANAGER_CHANGE_DISCOUNT_PAGE = MANAGER_PREFIX + "/changeDiscountPage";
+    public static final String MANAGER_USER_ACCOUNT_PAGE = MANAGER_PREFIX + "/userAccountPage";
+    public static final String MANAGER_USERS_PAGE = MANAGER_PREFIX + "/usersPage";
 
     public static final String ADMIN_CREATE_TOUR_PAGE = ADMIN_PREFIX + "/createTourPage";
     public static final String ADMIN_UPDATE_TOUR_PAGE = ADMIN_PREFIX + "/updateTourPage";
