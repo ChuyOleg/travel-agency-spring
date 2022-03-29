@@ -1,6 +1,5 @@
 package com.oleh.chui.controller.admin;
 
-import com.oleh.chui.controller.util.Attribute;
 import com.oleh.chui.controller.util.HtmlPagePath;
 import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.model.dto.TourDto;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.oleh.chui.controller.util.Attribute.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(UriPath.ADMIN_PREFIX)
@@ -29,14 +30,14 @@ public class AdminTourController {
 
     @GetMapping(UriPath.TOUR_CREATE)
     public String getCreateTourPage(Model model) {
-        model.addAttribute(Attribute.TOUR_DTO, new TourDto());
+        model.addAttribute(TOUR_DTO, new TourDto());
         insertTourTypesAndHotelTypesIntoModel(model);
 
         return HtmlPagePath.ADMIN_CREATE_TOUR_PAGE;
     }
 
     @PostMapping(UriPath.TOUR_CREATE)
-    public String createTour(@ModelAttribute(name = Attribute.TOUR_DTO) @Valid TourDto tourDto,
+    public String createTour(@ModelAttribute(name = TOUR_DTO) @Valid TourDto tourDto,
                              BindingResult validationResult,
                              Model model) {
 
@@ -46,14 +47,14 @@ public class AdminTourController {
                     tourService.create(tourDto);
                     return UriPath.REDIRECT + UriPath.CATALOG;
                 } catch (TourNameIsReservedException e) {
-                    model.addAttribute(Attribute.NAME_IS_RESERVED, true);
+                    model.addAttribute(NAME_IS_RESERVED, true);
                 } catch (CityNotExistException e) {
-                    model.addAttribute(Attribute.CITY_IS_UNDEFINED, true);
+                    model.addAttribute(CITY_IS_UNDEFINED, true);
                 } catch (CountryNotExistException e) {
-                    model.addAttribute(Attribute.COUNTRY_IS_UNDEFINED, true);
+                    model.addAttribute(COUNTRY_IS_UNDEFINED, true);
                 }
             } else {
-                model.addAttribute(Attribute.INVALID_END_DATE, true);
+                model.addAttribute(INVALID_END_DATE, true);
             }
         }
 
@@ -61,20 +62,20 @@ public class AdminTourController {
         return HtmlPagePath.ADMIN_CREATE_TOUR_PAGE;
     }
 
-    @GetMapping(UriPath.TOUR + "/{id}")
-    public String getUpdateTourPage(@PathVariable Long id, Model model) {
+    @GetMapping(UriPath.TOUR + UriPath.PATH_VARIABLE_ID)
+    public String getUpdateTourPage(@PathVariable(name = UriPath.ID) Long id, Model model) {
         TourDto tourDto = new TourDto(tourService.getById(id));
 
-        model.addAttribute(Attribute.TOUR_DTO, tourDto);
+        model.addAttribute(TOUR_DTO, tourDto);
         insertTourTypesAndHotelTypesIntoModel(model);
-        model.addAttribute(Attribute.ID, id);
+        model.addAttribute(ID, id);
 
         return HtmlPagePath.ADMIN_UPDATE_TOUR_PAGE;
     }
 
-    @PostMapping(UriPath.TOUR_UPDATE + "/{id}")
-    public String updateTour(@PathVariable Long id,
-                             @ModelAttribute(name = Attribute.TOUR_DTO) @Valid TourDto tourDto,
+    @PostMapping(UriPath.TOUR_UPDATE + UriPath.PATH_VARIABLE_ID)
+    public String updateTour(@PathVariable(name = UriPath.ID) Long id,
+                             @ModelAttribute(name = TOUR_DTO) @Valid TourDto tourDto,
                              BindingResult validationResult,
                              Model model) {
 
@@ -84,17 +85,17 @@ public class AdminTourController {
                     tourService.update(tourDto, id);
                     return UriPath.REDIRECT + UriPath.CATALOG;
                 } catch (CityNotExistException e) {
-                    model.addAttribute(Attribute.CITY_IS_UNDEFINED, true);
+                    model.addAttribute(CITY_IS_UNDEFINED, true);
                 } catch (CountryNotExistException e) {
-                    model.addAttribute(Attribute.COUNTRY_IS_UNDEFINED, true);
+                    model.addAttribute(COUNTRY_IS_UNDEFINED, true);
                 }
             } else {
-                model.addAttribute(Attribute.INVALID_END_DATE, true);
+                model.addAttribute(INVALID_END_DATE, true);
             }
         }
 
         insertTourTypesAndHotelTypesIntoModel(model);
-        model.addAttribute(Attribute.ID, id);
+        model.addAttribute(ID, id);
         return HtmlPagePath.ADMIN_UPDATE_TOUR_PAGE;
     }
 
@@ -103,7 +104,7 @@ public class AdminTourController {
         boolean tourIsAlreadyBought = orderService.isExistedByTourId(tourId);
 
         if (tourIsAlreadyBought) {
-            return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId + Attribute.URL_ERROR_PARAMETER;
+            return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId + URL_ERROR_PARAMETER;
         }
 
         tourService.delete(tourId);
@@ -112,7 +113,7 @@ public class AdminTourController {
     }
 
     private void insertTourTypesAndHotelTypesIntoModel(Model model) {
-        model.addAttribute(Attribute.TOUR_TYPE_LIST, TourType.TourTypeEnum.values());
-        model.addAttribute(Attribute.HOTEL_TYPE_LIST, HotelType.HotelTypeEnum.values());
+        model.addAttribute(TOUR_TYPE_LIST, TourType.TourTypeEnum.values());
+        model.addAttribute(HOTEL_TYPE_LIST, HotelType.HotelTypeEnum.values());
     }
 }

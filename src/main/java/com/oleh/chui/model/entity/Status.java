@@ -1,11 +1,14 @@
 package com.oleh.chui.model.entity;
 
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "status")
+@Table(name = TableName.STATUS_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,19 +19,19 @@ import javax.persistence.*;
 public class Status {
 
     @Id
-    @Column(name = "status_id")
+    @Column(name = ColumnName.STATUS_ID)
     @SequenceGenerator(
-            name = "status_sequence",
-            sequenceName = "status_sequence",
+            name = SequenceName.STATUS_SEQUENCE_NAME,
+            sequenceName = SequenceName.STATUS_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "status_sequence"
+            generator = SequenceName.STATUS_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "status")
+    @Column(name = ColumnName.STATUS)
     @Enumerated(EnumType.STRING)
     private StatusEnum value;
 

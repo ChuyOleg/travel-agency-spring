@@ -1,11 +1,14 @@
 package com.oleh.chui.model.entity;
 
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
+@Table(name = TableName.ROLE_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,19 +19,19 @@ import javax.persistence.*;
 public class Role {
 
     @Id
-    @Column(name = "role_id")
+    @Column(name = ColumnName.ROLE_ID)
     @SequenceGenerator(
-            name = "role_sequence",
-            sequenceName = "role_sequence",
+            name = SequenceName.ROLE_SEQUENCE_NAME,
+            sequenceName = SequenceName.ROLE_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "role_sequence"
+            generator = SequenceName.ROLE_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "role")
+    @Column(name = ColumnName.ROLE)
     @Enumerated(EnumType.STRING)
     private RoleEnum value;
 

@@ -1,6 +1,5 @@
 package com.oleh.chui.controller.common;
 
-import com.oleh.chui.controller.util.Attribute;
 import com.oleh.chui.controller.util.HtmlPagePath;
 import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.controller.validator.FilterParametersValidator;
@@ -20,34 +19,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.oleh.chui.controller.util.Attribute.*;
+
 @Controller
 @RequiredArgsConstructor
 public class CatalogController {
 
     private final TourService tourService;
-    private static final Integer PAGE_SIZE = 4;
-    private static final Integer START_PAGE_NUMBER = 1;
-
-    private static final String URI_PARAM_PAGE = "page";
-    private static final String URI_PARAM_PERSON_NUMBER = "personNumber";
-    private static final String URI_PARAM_MIN_PRICE = "minPrice";
-    private static final String URI_PARAM_MAX_PRICE = "maxPrice";
-    private static final String URI_PARAM_TOUR_TYPE = "tourType";
-    private static final String URI_PARAM_HOTEL_TYPE = "hotelType";
-
-    private static final String MODEL_PARAM_TOUR_LIST = "tourList";
-    private static final String MODEL_PARAM_PAGES_NUMBER = "pagesNumber";
-    private static final String MODEL_PARAM_ACTIVE_PAGE_NUMBER = "activePageNumber";
-    private static final String MODEL_PARAM_CHECKED_TOUR_TYPE_LIST = "checkedTourTypeList";
-    private static final String MODEL_PARAM_CHECKED_HOTEL_TYPE_LIST = "checkedHotelTypeList";
 
     @GetMapping(UriPath.CATALOG)
-    public String getCatalogPage(@RequestParam(name = URI_PARAM_PERSON_NUMBER, required = false) String personNumber,
-                                 @RequestParam(name = URI_PARAM_MIN_PRICE, required = false) String minPrice,
-                                 @RequestParam(name = URI_PARAM_MAX_PRICE, required = false) String maxPrice,
-                                 @RequestParam(name = URI_PARAM_TOUR_TYPE, required = false) String[] tourTypeArray,
-                                 @RequestParam(name = URI_PARAM_HOTEL_TYPE, required = false) String[] hotelTypeArray,
-                                 @RequestParam(name = URI_PARAM_PAGE, required = false) String pageNumber,
+    public String getCatalogPage(@RequestParam(name = PERSON_NUMBER, required = false) String personNumber,
+                                 @RequestParam(name = MIN_PRICE, required = false) String minPrice,
+                                 @RequestParam(name = MAX_PRICE, required = false) String maxPrice,
+                                 @RequestParam(name = TOUR_TYPE, required = false) String[] tourTypeArray,
+                                 @RequestParam(name = HOTEL_TYPE, required = false) String[] hotelTypeArray,
+                                 @RequestParam(name = PAGE, required = false) String pageNumber,
                                  Model model) {
 
         boolean filterParamsAreValid = FilterParametersValidator.validate(personNumber, minPrice, maxPrice, model);
@@ -60,9 +46,9 @@ public class CatalogController {
             final int pagesNumber = tourService.getPagesCountBySpecification(tourSpecification, PAGE_SIZE);
             List<Tour> tourList = tourService.getPageBySpecification(tourSpecification, activePageNumber, PAGE_SIZE);
 
-            model.addAttribute(MODEL_PARAM_ACTIVE_PAGE_NUMBER, activePageNumber);
-            model.addAttribute(MODEL_PARAM_PAGES_NUMBER , pagesNumber);
-            model.addAttribute(MODEL_PARAM_TOUR_LIST, tourList);
+            model.addAttribute(ACTIVE_PAGE_NUMBER, activePageNumber);
+            model.addAttribute(PAGES_NUMBER , pagesNumber);
+            model.addAttribute(TOUR_LIST, tourList);
         }
 
         insertFilterParamsIntoModel(personNumber, minPrice, maxPrice, tourTypeArray, hotelTypeArray, model);
@@ -80,18 +66,18 @@ public class CatalogController {
     }
 
     private void insertTourTypesAndHotelTypesIntoModel(Model model) {
-        model.addAttribute(Attribute.TOUR_TYPE_LIST, TourType.TourTypeEnum.values());
-        model.addAttribute(Attribute.HOTEL_TYPE_LIST, HotelType.HotelTypeEnum.values());
+        model.addAttribute(TOUR_TYPE_LIST, TourType.TourTypeEnum.values());
+        model.addAttribute(HOTEL_TYPE_LIST, HotelType.HotelTypeEnum.values());
     }
 
     private void insertFilterParamsIntoModel(String personNumber, String minPrice, String maxPrice,
                                              String[] tourTypeArray, String[] hotelTypeArray, Model model) {
 
-        model.addAttribute(URI_PARAM_PERSON_NUMBER, personNumber);
-        model.addAttribute(URI_PARAM_MIN_PRICE, minPrice);
-        model.addAttribute(URI_PARAM_MAX_PRICE, maxPrice);
-        if (tourTypeArray != null) model.addAttribute(MODEL_PARAM_CHECKED_TOUR_TYPE_LIST, new ArrayList<>(Arrays.asList(tourTypeArray)));
-        if (hotelTypeArray != null) model.addAttribute(MODEL_PARAM_CHECKED_HOTEL_TYPE_LIST, new ArrayList<>(Arrays.asList(hotelTypeArray)));
+        model.addAttribute(PERSON_NUMBER, personNumber);
+        model.addAttribute(MIN_PRICE, minPrice);
+        model.addAttribute(MAX_PRICE, maxPrice);
+        if (tourTypeArray != null) model.addAttribute(CHECKED_TOUR_TYPE_LIST, new ArrayList<>(Arrays.asList(tourTypeArray)));
+        if (hotelTypeArray != null) model.addAttribute(CHECKED_HOTEL_TYPE_LIST, new ArrayList<>(Arrays.asList(hotelTypeArray)));
     }
 
 }

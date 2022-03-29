@@ -1,11 +1,14 @@
 package com.oleh.chui.model.entity;
 
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "hotel_types")
+@Table(name = TableName.HOTEL_TYPE_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,19 +19,19 @@ import javax.persistence.*;
 public class HotelType {
 
     @Id
-    @Column(name = "hotel_type_id")
+    @Column(name = ColumnName.HOTEL_TYPE_ID)
     @SequenceGenerator(
-            name = "hotel_type_sequence",
-            sequenceName = "hotel_type_sequence",
+            name = SequenceName.HOTEL_TYPE_SEQUENCE_NAME,
+            sequenceName = SequenceName.HOTEL_TYPE_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "hotel_type_sequence"
+            generator = SequenceName.HOTEL_TYPE_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "hotel_type")
+    @Column(name = ColumnName.HOTEL_TYPE)
     @Enumerated(EnumType.STRING)
     private HotelTypeEnum value;
 

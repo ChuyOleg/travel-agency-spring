@@ -19,15 +19,6 @@ public class FieldValidator {
         return false;
     }
 
-    public static boolean fieldIsValidDouble(String field) {
-        try {
-            Double.parseDouble(field);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
     public static boolean fieldIsNotValidBigDecimal(String field) {
         try {
             new BigDecimal(field);

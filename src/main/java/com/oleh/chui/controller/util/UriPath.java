@@ -6,6 +6,8 @@ public class UriPath {
 
     public static final String REDIRECT = "redirect:";
     public static final String SLASH = "/";
+    public static final String PATH_VARIABLE_ID = "{/id}";
+    public static final String ID = "id";
 
     public static final String USER_PREFIX = "/user";
     public static final String MANAGER_PREFIX = "/manager";
@@ -29,6 +31,7 @@ public class UriPath {
     public static final String USERS = "/users";
 
     public static final String LOGIN = "/login";
+    public static final String LOGOUT = "/logout";
     public static final String REGISTRATION = "/registration";
     public static final String CATALOG = "/catalog";
 }

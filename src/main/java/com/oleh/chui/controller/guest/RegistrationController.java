@@ -1,6 +1,5 @@
 package com.oleh.chui.controller.guest;
 
-import com.oleh.chui.controller.util.Attribute;
 import com.oleh.chui.controller.util.HtmlPagePath;
 import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.model.dto.UserDto;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.oleh.chui.controller.util.Attribute.*;
 import static com.oleh.chui.model.dto.message.UserValidErrorMessage.*;
 
 @Controller
@@ -25,19 +25,19 @@ public class RegistrationController {
 
     @GetMapping(UriPath.REGISTRATION)
     public String getRegistrationPage(Model model) {
-        model.addAttribute(Attribute.USER_DTO, new UserDto());
+        model.addAttribute(USER_DTO, new UserDto());
 
         return HtmlPagePath.GUEST_REGISTRATION_PAGE;
     }
 
     @PostMapping(UriPath.REGISTRATION)
-    public String createNewAccount(@ModelAttribute(name = Attribute.USER_DTO) @Valid UserDto userDto,
+    public String createNewAccount(@ModelAttribute(name = USER_DTO) @Valid UserDto userDto,
                                    BindingResult validationResult,
                                    Model model) {
 
-        if (!validationResult.hasFieldErrors(Attribute.USER_DTO_FIELD_PASSWORD) && !userDto.getPassword().equals(userDto.getPasswordCopy())) {
+        if (!validationResult.hasFieldErrors(USER_DTO_FIELD_PASSWORD) && !userDto.getPassword().equals(userDto.getPasswordCopy())) {
             validationResult.addError(
-                    new FieldError(UserDto.class.getName(), Attribute.USER_DTO_FIELD_PASSWORD_COPY, USER_ERROR_PASSWORDS_NOT_MATCH)
+                    new FieldError(UserDto.class.getName(), USER_DTO_FIELD_PASSWORD_COPY, USER_ERROR_PASSWORDS_NOT_MATCH)
             );
         }
 

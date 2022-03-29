@@ -1,6 +1,5 @@
 package com.oleh.chui.controller.manager;
 
-import com.oleh.chui.controller.util.Attribute;
 import com.oleh.chui.controller.util.HtmlPagePath;
 import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.model.dto.TourDto;
@@ -31,27 +30,27 @@ public class ManagerTourController {
         return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId;
     }
 
-    @GetMapping(UriPath.TOUR_CHANGE_DISCOUNT + "/{id}")
-    public String getChangeDiscount(@PathVariable Long id,
+    @GetMapping(UriPath.TOUR_CHANGE_DISCOUNT + UriPath.PATH_VARIABLE_ID)
+    public String getChangeDiscount(@PathVariable(name = UriPath.ID) Long id,
                                     Model model) {
 
         Tour tour = tourService.getById(id);
 
-        model.addAttribute(Attribute.TOUR_DTO, new TourDto(tour));
-        model.addAttribute(Attribute.ID, id);
+        model.addAttribute(TOUR_DTO, new TourDto(tour));
+        model.addAttribute(ID, id);
 
         return HtmlPagePath.MANAGER_CHANGE_DISCOUNT_PAGE;
     }
 
-    @PostMapping(UriPath.TOUR_CHANGE_DISCOUNT + "/{id}")
-    public String changeDiscount(@PathVariable Long id,
+    @PostMapping(UriPath.TOUR_CHANGE_DISCOUNT + UriPath.PATH_VARIABLE_ID)
+    public String changeDiscount(@PathVariable(name = UriPath.ID) Long id,
                                  Model model,
                                  RedirectAttributes redirectAttributes,
-                                 @ModelAttribute(name = Attribute.TOUR_DTO) @Valid TourDto tourDto,
+                                 @ModelAttribute(name = TOUR_DTO) @Valid TourDto tourDto,
                                  BindingResult bindingResult
                                  ) {
 
-        model.addAttribute(Attribute.ID, id);
+        model.addAttribute(ID, id);
 
         if (bindingResult.hasFieldErrors(TOUR_DTO_DISCOUNT_STEP) || bindingResult.hasFieldErrors(TOUR_DTO_MAX_DISCOUNT)) {
             return HtmlPagePath.MANAGER_CHANGE_DISCOUNT_PAGE;
@@ -59,7 +58,7 @@ public class ManagerTourController {
 
         tourService.changeDiscount(tourDto, id);
 
-        redirectAttributes.addFlashAttribute(Attribute.DISCOUNT_HAS_BEEN_CHANGES, true);
+        redirectAttributes.addFlashAttribute(DISCOUNT_HAS_BEEN_CHANGES, true);
         return UriPath.REDIRECT + UriPath.MANAGER_PREFIX + UriPath.TOUR_CHANGE_DISCOUNT + UriPath.SLASH + id;
     }
 

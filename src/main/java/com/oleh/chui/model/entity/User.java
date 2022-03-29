@@ -1,6 +1,9 @@
 package com.oleh.chui.model.entity;
 
 import com.oleh.chui.model.dto.UserDto;
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "users")
+@Table(name = TableName.USER_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,41 +26,41 @@ import java.util.Collections;
 public class User implements UserDetails {
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = ColumnName.USER_ID)
     @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
+            name = SequenceName.USER_SEQUENCE_NAME,
+            sequenceName = SequenceName.USER_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
+            generator = SequenceName.USER_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = ColumnName.USERNAME)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = ColumnName.PASSWORD)
     private String password;
 
-    @Column(name = "first_name")
+    @Column(name = ColumnName.FIRST_NAME)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = ColumnName.LAST_NAME)
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = ColumnName.EMAIL)
     private String email;
 
-    @Column(name = "money")
+    @Column(name = ColumnName.MONEY)
     private BigDecimal money;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = ColumnName.ROLE_ID)
     private Role role;
 
-    @Column(name = "is_blocked")
+    @Column(name = ColumnName.IS_BLOCKED)
     private boolean blocked;
 
     @Override

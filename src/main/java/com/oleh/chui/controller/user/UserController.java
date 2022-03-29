@@ -1,6 +1,5 @@
 package com.oleh.chui.controller.user;
 
-import com.oleh.chui.controller.util.Attribute;
 import com.oleh.chui.controller.util.HtmlPagePath;
 import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.model.entity.Order;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
+import static com.oleh.chui.controller.util.Attribute.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,8 +54,8 @@ public class UserController {
             User currentUser = userService.getById(currentUserId);
             List<Order> orderList = orderService.getAllByUserId(currentUserId);
 
-            model.addAttribute(Attribute.USER, currentUser);
-            model.addAttribute(Attribute.ORDER_LIST, orderList);
+            model.addAttribute(USER, currentUser);
+            model.addAttribute(ORDER_LIST, orderList);
         }
 
         return HtmlPagePath.USER_ACCOUNT_PAGE;

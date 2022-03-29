@@ -1,6 +1,9 @@
 package com.oleh.chui.model.entity;
 
 import com.oleh.chui.model.dto.TourDto;
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 
 @Entity
-@Table(name = "tours")
+@Table(name = TableName.TOUR_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,58 +24,58 @@ import java.util.HashSet;
 public class Tour {
 
     @Id
-    @Column(name = "tour_id")
+    @Column(name = ColumnName.TOUR_ID)
     @SequenceGenerator(
-            name = "tour_sequence",
-            sequenceName = "tour_sequence",
+            name = SequenceName.TOUR_SEQUENCE_NAME,
+            sequenceName = SequenceName.TOUR_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "tour_sequence"
+            generator = SequenceName.TOUR_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = ColumnName.NAME)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = ColumnName.PRICE)
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "city_id")
+    @JoinColumn(name = ColumnName.CITY_ID)
     private City city;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = ColumnName.DESCRIPTION, columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "max_discount")
+    @Column(name = ColumnName.MAX_DISCOUNT)
     private int maxDiscount;
 
-    @Column(name = "discount_step")
+    @Column(name = ColumnName.DISCOUNT_STEP)
     private double discountStep;
 
     @ManyToOne
-    @JoinColumn(name = "tour_type_id")
+    @JoinColumn(name = ColumnName.TOUR_TYPE_ID)
     private TourType tourType;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_type_id")
+    @JoinColumn(name = ColumnName.HOTEL_TYPE_ID)
     private HotelType hotelType;
 
-    @Column(name = "person_number")
+    @Column(name = ColumnName.PERSON_NUMBER)
     private int personNumber;
 
-    @Column(name = "start_date")
+    @Column(name = ColumnName.START_DATE)
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = ColumnName.END_DATE)
     private LocalDate endDate;
 
-    @Column(name = "nights_number")
+    @Column(name = ColumnName.NIGHTS_NUMBER)
     private int nightsNumber;
 
-    @Column(name = "is_burning")
+    @Column(name = ColumnName.IS_BURNING)
     private boolean burning;
 
     public Tour(TourDto tourDto) {

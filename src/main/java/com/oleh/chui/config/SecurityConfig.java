@@ -1,5 +1,6 @@
 package com.oleh.chui.config;
 
+import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.model.entity.Role;
 import com.oleh.chui.model.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final static int PASSWORD_ENCODER_STRENGTH = 8;
+    private static final int PASSWORD_ENCODER_STRENGTH = 8;
+    private static final String ADMIN_PATTERN = "/admin/**";
+    private static final String MANAGER_PATTERN = "/manager/**";
+    private static final String USER_PATTERN = "/user/**";
+    private static final String ALL_PATTERN = "/**";
+    private static final String URI_ERROR_PARAM = "?error=true";
+    private static final String SESSION_COOKIE_NAME = "JSESSIONID";
 
     private final UserService userService;
 
@@ -38,19 +45,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority(Role.RoleEnum.ADMIN.name())
-                .antMatchers("/manager/**").hasAnyAuthority(Role.RoleEnum.MANAGER.name(), Role.RoleEnum.ADMIN.name())
-                .antMatchers("/user/**").hasAuthority(Role.RoleEnum.USER.name())
-                .antMatchers("/**").permitAll()
+                .antMatchers(ADMIN_PATTERN).hasAuthority(Role.RoleEnum.ADMIN.name())
+                .antMatchers(MANAGER_PATTERN).hasAnyAuthority(Role.RoleEnum.MANAGER.name(), Role.RoleEnum.ADMIN.name())
+                .antMatchers(USER_PATTERN).hasAuthority(Role.RoleEnum.USER.name())
+                .antMatchers(ALL_PATTERN).permitAll()
                 .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/catalog")
-                    .failureUrl("/login?error=true")
+                    .loginPage(UriPath.LOGIN)
+                    .defaultSuccessUrl(UriPath.CATALOG)
+                    .failureUrl(UriPath.LOGIN + URI_ERROR_PARAM)
                 .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login").deleteCookies("JSESSIONID")
+                    .logoutRequestMatcher(new AntPathRequestMatcher(UriPath.LOGOUT))
+                    .logoutSuccessUrl(UriPath.LOGIN).deleteCookies(SESSION_COOKIE_NAME)
                     .invalidateHttpSession(true);
     }
 }

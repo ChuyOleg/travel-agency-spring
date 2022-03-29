@@ -1,11 +1,14 @@
 package com.oleh.chui.model.entity;
 
+import com.oleh.chui.model.entity.constant.ColumnName;
+import com.oleh.chui.model.entity.constant.SequenceName;
+import com.oleh.chui.model.entity.constant.TableName;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cities")
+@Table(name = TableName.CITY_TABLE_NAME)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,23 +19,23 @@ import javax.persistence.*;
 public class City {
 
     @Id
-    @Column(name = "city_id")
+    @Column(name = ColumnName.CITY_ID)
     @SequenceGenerator(
-            name = "city_sequence",
-            sequenceName = "city_sequence",
+            name = SequenceName.CITY_SEQUENCE_NAME,
+            sequenceName = SequenceName.CITY_SEQUENCE_NAME,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "city_sequence"
+            generator = SequenceName.CITY_SEQUENCE_NAME
     )
     private Long id;
 
-    @Column(name = "city")
+    @Column(name = ColumnName.CITY)
     private String city;
 
     @ManyToOne
-    @JoinColumn(name = "country_id")
+    @JoinColumn(name = ColumnName.COUNTRY_ID)
     private Country country;
 
 }
