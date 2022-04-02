@@ -6,12 +6,12 @@ import com.oleh.chui.model.entity.User;
 import com.oleh.chui.model.exception.user.UsernameIsReservedException;
 import com.oleh.chui.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -49,18 +50,21 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
+        log.info("New account '{}' has been created", user);
     }
 
     public void blockById(Long id) {
         User user = userRepository.getById(id);
         user.setBlocked(true);
         userRepository.save(user);
+        log.info("User (id = {}) has been blocked", id);
     }
 
     public void unblockById(Long id) {
         User user = userRepository.getById(id);
         user.setBlocked(false);
         userRepository.save(user);
+        log.info("User (id = {}) has been unblocked", id);
     }
 
     private void checkUsernameIsUnique(String username)throws UsernameIsReservedException {

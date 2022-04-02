@@ -9,8 +9,7 @@ import com.oleh.chui.model.entity.TourType;
 import com.oleh.chui.model.service.TourService;
 import com.oleh.chui.model.service.util.pagination.PaginationInfo;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +22,7 @@ import static com.oleh.chui.controller.util.Attribute.*;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j2
 public class CatalogController {
 
     private final TourService tourService;

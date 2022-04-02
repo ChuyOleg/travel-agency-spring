@@ -6,6 +6,7 @@ import com.oleh.chui.model.dto.UserDto;
 import com.oleh.chui.model.exception.user.UsernameIsReservedException;
 import com.oleh.chui.model.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import static com.oleh.chui.controller.util.Attribute.*;
 import static com.oleh.chui.model.dto.message.UserValidErrorMessage.*;
 
 @Controller
+@Log4j2
 @RequiredArgsConstructor
 public class RegistrationController {
 
@@ -43,14 +45,17 @@ public class RegistrationController {
 
         if (!validationResult.hasErrors()) {
             try {
+                log.info("User wants to create new account");
                 userService.registerNewAccount(userDto);
 
                 return UriPath.REDIRECT + UriPath.LOGIN;
             } catch (UsernameIsReservedException e) {
                 model.addAttribute(USER_ERROR_USERNAME_IS_RESERVED, true);
+                log.warn("Username '{}' is reserved", userDto.getUsername());
             }
         }
 
+        log.warn("User print some incorrect data during registration");
         return HtmlPagePath.GUEST_REGISTRATION_PAGE;
     }
 

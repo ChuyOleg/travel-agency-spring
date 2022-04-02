@@ -6,6 +6,7 @@ import com.oleh.chui.model.entity.Tour;
 import com.oleh.chui.model.entity.User;
 import com.oleh.chui.model.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class OrderService {
 
     private static final int MAX_PERCENTAGE = 100;
@@ -43,6 +45,7 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
+        log.info("New order '{}' has been created", order);
     }
 
     public List<Order> getAllByUserId(Long userId) {
@@ -66,6 +69,7 @@ public class OrderService {
         order.setStatus(newStatusInstance);
 
         orderRepository.save(order);
+        log.info("Status of order (id = {}) has been changed to <{}>", orderId, newStatus);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)

@@ -8,6 +8,7 @@ import com.oleh.chui.model.entity.User;
 import com.oleh.chui.model.service.OrderService;
 import com.oleh.chui.model.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import java.util.List;
 import static com.oleh.chui.controller.util.Attribute.*;
 
 @Controller
+@Log4j2
 @RequiredArgsConstructor
 @RequestMapping(UriPath.USER_PREFIX)
 public class UserController {
@@ -37,6 +39,8 @@ public class UserController {
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(Role.RoleEnum.USER.name()))) {
             User currentUser = (User) authentication.getPrincipal();
             Long userId = currentUser.getId();
+
+            log.info("User (id = {}) wants to buy tour (id = {})", userId, tourId);
 
             orderService.createOrder(userId, tourId);
         }

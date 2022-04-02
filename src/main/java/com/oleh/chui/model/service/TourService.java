@@ -13,6 +13,7 @@ import com.oleh.chui.model.repository.TourRepository;
 import com.oleh.chui.model.service.util.filter.TourSpecification;
 import com.oleh.chui.model.service.util.pagination.PaginationInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class TourService {
 
     private final TourRepository tourRepository;
@@ -60,6 +62,7 @@ public class TourService {
         tour.setHotelType(hotelTypeService.getByValue(tour.getHotelType().getValue()));
 
         tourRepository.save(tour);
+        log.info("New tour '{}' has been created", tour);
     }
 
     @Transactional()
@@ -73,6 +76,7 @@ public class TourService {
         tour.setHotelType(hotelTypeService.getByValue(tour.getHotelType().getValue()));
 
         tourRepository.save(tour);
+        log.info("Tour (id = {}) has been updated", id);
     }
 
     public void delete(Long id) {
@@ -83,6 +87,7 @@ public class TourService {
         Tour tour = getById(id);
         tour.setBurning(!tour.isBurning());
         tourRepository.save(tour);
+        log.info("Burning state of tour (id = {}) has been changed", id);
     }
 
     public void changeDiscount(TourDto tourDto, Long id) {
@@ -90,6 +95,7 @@ public class TourService {
         tour.setMaxDiscount(tourDto.getMaxDiscount());
         tour.setDiscountStep(tourDto.getDiscountStep());
         tourRepository.save(tour);
+        log.info("Discount of tour (id = {}) has been changed", id);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)

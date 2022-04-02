@@ -6,6 +6,7 @@ import com.oleh.chui.model.dto.TourDto;
 import com.oleh.chui.model.entity.Tour;
 import com.oleh.chui.model.service.TourService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import static com.oleh.chui.controller.util.Attribute.*;
 
 @Controller
+@Log4j2
 @RequiredArgsConstructor
 @RequestMapping(UriPath.MANAGER_PREFIX)
 public class ManagerTourController {
@@ -25,6 +27,8 @@ public class ManagerTourController {
 
     @PostMapping(UriPath.TOUR_CHANGE_BURNING_STATE)
     public String changeBurningState(@RequestParam Long tourId) {
+        log.info("Manager (or Admin) wants to change burning state of the tour (id = {})", tourId);
+
         tourService.changeBurningState(tourId);
 
         return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId;
@@ -50,9 +54,12 @@ public class ManagerTourController {
                                  BindingResult bindingResult
                                  ) {
 
+        log.info("Manager (or Admin) wants to change discount of the tour (id = {})", id);
+
         model.addAttribute(ID, id);
 
         if (bindingResult.hasFieldErrors(TOUR_DTO_DISCOUNT_STEP) || bindingResult.hasFieldErrors(TOUR_DTO_MAX_DISCOUNT)) {
+            log.warn("Manager (or Admin) printed incorrect discount info");
             return HtmlPagePath.MANAGER_CHANGE_DISCOUNT_PAGE;
         }
 

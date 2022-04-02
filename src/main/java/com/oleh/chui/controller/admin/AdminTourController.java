@@ -11,6 +11,7 @@ import com.oleh.chui.model.exception.tour.TourNameIsReservedException;
 import com.oleh.chui.model.service.OrderService;
 import com.oleh.chui.model.service.TourService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import static com.oleh.chui.controller.util.Attribute.*;
 
 @Controller
+@Log4j2
 @RequiredArgsConstructor
 @RequestMapping(UriPath.ADMIN_PREFIX)
 public class AdminTourController {
@@ -44,13 +46,18 @@ public class AdminTourController {
         if (!validationResult.hasErrors()) {
             if (tourDto.getEndDate().isAfter(tourDto.getStartDate())) {
                 try {
+                    log.info("Admin wants to create new Tour");
                     tourService.create(tourDto);
+                    log.info("Admin successfully has created new tour");
                     return UriPath.REDIRECT + UriPath.CATALOG;
                 } catch (TourNameIsReservedException e) {
+                    log.warn("Name of tour '{}' is reserved", tourDto.getName());
                     model.addAttribute(NAME_IS_RESERVED, true);
                 } catch (CityNotExistException e) {
+                    log.warn("City of tour '{}' is undefined", tourDto.getCity());
                     model.addAttribute(CITY_IS_UNDEFINED, true);
                 } catch (CountryNotExistException e) {
+                    log.warn("Country of tour '{}' is undefined", tourDto.getCountry());
                     model.addAttribute(COUNTRY_IS_UNDEFINED, true);
                 }
             } else {
@@ -79,6 +86,7 @@ public class AdminTourController {
                              BindingResult validationResult,
                              Model model) {
 
+        log.info("Admin wants to update tour (id = {})", id);
         if (!validationResult.hasErrors()) {
             if (tourDto.getEndDate().isAfter(tourDto.getStartDate())) {
                 try {
@@ -102,12 +110,15 @@ public class AdminTourController {
     @PostMapping(UriPath.TOUR_DELETE)
     public String deleteTour(@RequestParam Long tourId) {
         boolean tourIsAlreadyBought = orderService.isExistedByTourId(tourId);
+        log.info("Admin wants to delete tour (id = {})", tourId);
 
         if (tourIsAlreadyBought) {
+            log.warn("Tour (id = {}) cannot be deleted because it is already booked", tourId);
             return UriPath.REDIRECT + UriPath.TOUR_DETAILS + UriPath.SLASH + tourId + URL_ERROR_PARAMETER;
         }
 
         tourService.delete(tourId);
+        log.warn("Tour (id = {}) has been deleted", tourId);
 
         return UriPath.REDIRECT + UriPath.CATALOG;
     }
