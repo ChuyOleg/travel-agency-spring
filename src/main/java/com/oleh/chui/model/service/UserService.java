@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    @Transactional()
     public void registerNewAccount(UserDto userDto) throws UsernameIsReservedException {
         checkUsernameIsUnique(userDto.getUsername());
 

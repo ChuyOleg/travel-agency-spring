@@ -7,6 +7,8 @@ import com.oleh.chui.model.entity.User;
 import com.oleh.chui.model.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,18 +20,19 @@ import java.util.List;
 public class OrderService {
 
     private static final int MAX_PERCENTAGE = 100;
+    private static final int PRICE_SCALE = 2;
 
-    private final UserService userService;
     private final TourService tourService;
     private final StatusService statusService;
     private final OrderRepository orderRepository;
 
+    @Transactional()
     public void createOrder(Long userId, Long tourId) {
-        User user = userService.getById(userId);
-        Tour tour = tourService.getById(tourId);
-
-        BigDecimal finalPrice = calculateFinalPrice(userId, tour);
+        User user = User.builder().id(userId).build();
+        Tour tour = Tour.builder().id(tourId).build();
         Status status = statusService.getByValue(Status.StatusEnum.REGISTERED);
+
+        BigDecimal finalPrice = calculateFinalPrice(userId, tourId);
 
         Order order = Order.builder()
                 .user(user)
@@ -54,6 +57,7 @@ public class OrderService {
         return orderRepository.existsByTourId(tourId);
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void changeStatus(String newStatus, Long orderId) {
         Order order = orderRepository.getById(orderId);
         Status.StatusEnum newStatusValue = Status.StatusEnum.valueOf(newStatus);
@@ -64,8 +68,10 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public BigDecimal calculateFinalPrice(Long userId, Tour tour) {
-        int ordersCount = findCountByUserId(userId);
+    @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
+    public BigDecimal calculateFinalPrice(Long userId, Long tourId) {
+        int ordersCount = orderRepository.countByUserId(userId);
+        Tour tour = tourService.getById(tourId);
 
         double totalDiscount = tour.getDiscountStep() * ordersCount;
 
@@ -76,11 +82,7 @@ public class OrderService {
         double FINAL_PRICE_IN_PERCENTAGE = MAX_PERCENTAGE - finalDiscount;
 
         return tour.getPrice().multiply(BigDecimal.valueOf(FINAL_PRICE_IN_PERCENTAGE / MAX_PERCENTAGE))
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private int findCountByUserId(Long userId) {
-        return orderRepository.countByUserId(userId);
+                .setScale(PRICE_SCALE, RoundingMode.HALF_UP);
     }
 
 }

@@ -5,11 +5,12 @@ import com.oleh.chui.controller.util.UriPath;
 import com.oleh.chui.controller.validator.FilterParametersValidator;
 import com.oleh.chui.controller.validator.util.FieldValidator;
 import com.oleh.chui.model.entity.HotelType;
-import com.oleh.chui.model.entity.Tour;
 import com.oleh.chui.model.entity.TourType;
 import com.oleh.chui.model.service.TourService;
-import com.oleh.chui.model.service.util.filter.TourSpecification;
+import com.oleh.chui.model.service.util.pagination.PaginationInfo;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
@@ -41,14 +41,13 @@ public class CatalogController {
         if (filterParamsAreValid) {
             final int activePageNumber = getActivePageNumber(pageNumber);
 
-            TourSpecification tourSpecification = tourService.buildSpecification(personNumber, minPrice, maxPrice, tourTypeArray, hotelTypeArray);
-
-            final int pagesNumber = tourService.getPagesCountBySpecification(tourSpecification, PAGE_SIZE);
-            List<Tour> tourList = tourService.getPageBySpecification(tourSpecification, activePageNumber, PAGE_SIZE);
+            PaginationInfo paginationResultData = tourService.getPaginationResultData(
+                    personNumber, minPrice, maxPrice, tourTypeArray, hotelTypeArray, activePageNumber
+            );
 
             model.addAttribute(ACTIVE_PAGE_NUMBER, activePageNumber);
-            model.addAttribute(PAGES_NUMBER , pagesNumber);
-            model.addAttribute(TOUR_LIST, tourList);
+            model.addAttribute(PAGES_NUMBER , paginationResultData.getPagesNumber());
+            model.addAttribute(TOUR_LIST, paginationResultData.getTourList());
         }
 
         insertFilterParamsIntoModel(personNumber, minPrice, maxPrice, tourTypeArray, hotelTypeArray, model);

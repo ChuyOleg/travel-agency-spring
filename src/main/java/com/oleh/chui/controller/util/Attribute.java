@@ -43,7 +43,6 @@ public class Attribute {
 
     public static final String NEW_STATUS = "newStatus";
 
-    public static final int PAGE_SIZE = 4;
     public static final int START_PAGE_NUMBER = 1;
     public static final String PAGE = "page";
     public static final String PAGES_NUMBER = "pagesNumber";

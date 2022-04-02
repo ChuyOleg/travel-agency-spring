@@ -11,13 +11,15 @@ import com.oleh.chui.model.service.util.filter.SearchCriteria;
 import com.oleh.chui.model.service.util.filter.SearchOperation;
 import com.oleh.chui.model.repository.TourRepository;
 import com.oleh.chui.model.service.util.filter.TourSpecification;
+import com.oleh.chui.model.service.util.pagination.PaginationInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,11 +34,22 @@ public class TourService {
     private final TourTypeService tourTypeService;
     private final HotelTypeService hotelTypeService;
 
+    private static final int PAGE_SIZE = 4;
+    private static final String BURNING = "burning";
+    private static final String ID = "id";
+    private static final String START_DATE = "startDate";
+    private static final String PERSON_NUMBER = "personNumber";
+    private static final String PRICE = "price";
+    private static final String TOUR_TYPE = "tourType";
+    private static final String HOTEL_TYPE = "hotelType";
+    private static final String TOUR_TYPE_VALUE = "value";
+    private static final String HOTEL_TYPE_VALUE = "value";
+
     public Tour getById(Long id) {
         return tourRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    @Transactional
+    @Transactional()
     public void create(TourDto tourDto) throws TourNameIsReservedException, CityNotExistException, CountryNotExistException {
         checkTourNameIsReserved(tourDto.getName());
         countryService.checkCountryAndCityExist(tourDto.getCountry(), tourDto.getCity());
@@ -49,6 +62,7 @@ public class TourService {
         tourRepository.save(tour);
     }
 
+    @Transactional()
     public void update(TourDto tourDto, Long id) throws CityNotExistException, CountryNotExistException {
         countryService.checkCountryAndCityExist(tourDto.getCountry(), tourDto.getCity());
 
@@ -78,48 +92,69 @@ public class TourService {
         tourRepository.save(tour);
     }
 
-    public List<Tour> getPageBySpecification(TourSpecification specification, int uiPageNumber, int pageSize) {
+    @Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+    public PaginationInfo getPaginationResultData(String personNumber,
+                                                  String minPrice,
+                                                  String maxPrice,
+                                                  String[] tourTypeArray,
+                                                  String[] hotelTypeArray,
+                                                  int uiPageNumber) {
+
+        PaginationInfo paginationResultData = new PaginationInfo();
+
+        TourSpecification tourSpecification = buildSpecification(personNumber, minPrice, maxPrice, tourTypeArray, hotelTypeArray);
+
+        List<Tour> pageOfTours = getPageBySpecification(tourSpecification, uiPageNumber);
+        final int pagesNumber = getPagesCountBySpecification(tourSpecification);
+
+        paginationResultData.setTourList(pageOfTours);
+        paginationResultData.setPagesNumber(pagesNumber);
+
+        return paginationResultData;
+    }
+
+    private List<Tour> getPageBySpecification(TourSpecification specification, int uiPageNumber) {
         final int dbPageNumber = uiPageNumber - 1;
-        Pageable pageRequestWithBurningFirst = PageRequest.of(dbPageNumber, pageSize, Sort.by("burning", "id").descending());
+        Pageable pageRequestWithBurningFirst = PageRequest.of(dbPageNumber, PAGE_SIZE, Sort.by(BURNING, ID).descending());
 
         return tourRepository.findAll(specification, pageRequestWithBurningFirst).toList();
     }
 
-    public int getPagesCountBySpecification(TourSpecification specification, int pageSize) {
+    private int getPagesCountBySpecification(TourSpecification specification) {
         final long toursCount = tourRepository.count(specification);
 
-        return (int) Math.ceil((double) toursCount / pageSize);
+        return (int) Math.ceil((double) toursCount / PAGE_SIZE);
     }
 
-    public TourSpecification buildSpecification(String personNumber,
+    private TourSpecification buildSpecification(String personNumber,
                                                 String minPrice,
                                                 String maxPrice,
                                                 String[] tourTypeArray,
                                                 String[] hotelTypeArray) {
 
         TourSpecification tourSpecification = new TourSpecification();
-        tourSpecification.add(new SearchCriteria("startDate", LocalDate.now(), SearchOperation.DATE_AFTER_THAN));
+        tourSpecification.add(new SearchCriteria(START_DATE, LocalDate.now(), SearchOperation.DATE_AFTER_THAN));
 
         if (personNumber != null && !personNumber.isEmpty()) {
-            tourSpecification.add(new SearchCriteria("personNumber", personNumber, SearchOperation.EQUAL));
+            tourSpecification.add(new SearchCriteria(PERSON_NUMBER, personNumber, SearchOperation.EQUAL));
         }
         if (minPrice != null && !minPrice.isEmpty()) {
-            tourSpecification.add(new SearchCriteria("price", minPrice, SearchOperation.GREATER_THAN_EQUAL));
+            tourSpecification.add(new SearchCriteria(PRICE, minPrice, SearchOperation.GREATER_THAN_EQUAL));
         }
         if (maxPrice != null && !maxPrice.isEmpty()) {
-            tourSpecification.add(new SearchCriteria("price", maxPrice, SearchOperation.LESS_THAN_EQUAL));
+            tourSpecification.add(new SearchCriteria(PRICE, maxPrice, SearchOperation.LESS_THAN_EQUAL));
         }
         if (tourTypeArray != null) {
             List<TourType.TourTypeEnum> tourTypeEnumList = Arrays.stream(tourTypeArray)
                     .map(TourType.TourTypeEnum::valueOf)
                     .collect(Collectors.toList());
-            tourSpecification.add(new SearchCriteria("tourType", tourTypeEnumList, SearchOperation.IN, "value"));
+            tourSpecification.add(new SearchCriteria(TOUR_TYPE, tourTypeEnumList, SearchOperation.IN, TOUR_TYPE_VALUE));
         }
         if (hotelTypeArray != null) {
             List<HotelType.HotelTypeEnum> hotelTypeEnumList = Arrays.stream(hotelTypeArray)
                     .map(HotelType.HotelTypeEnum::valueOf)
                     .collect(Collectors.toList());
-            tourSpecification.add(new SearchCriteria("hotelType", hotelTypeEnumList, SearchOperation.IN, "value"));
+            tourSpecification.add(new SearchCriteria(HOTEL_TYPE, hotelTypeEnumList, SearchOperation.IN, HOTEL_TYPE_VALUE));
         }
 
         return tourSpecification;

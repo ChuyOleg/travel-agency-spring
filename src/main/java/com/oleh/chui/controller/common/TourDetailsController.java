@@ -45,7 +45,7 @@ public class TourDetailsController {
             if (tourIsBoughtByCurrentUser) {
                 model.addAttribute(TOUR_IS_BOUGHT, true);
             } else {
-                BigDecimal finalPrice = orderService.calculateFinalPrice(currentUser.getId(), selectedTour);
+                BigDecimal finalPrice = orderService.calculateFinalPrice(currentUser.getId(), id);
                 model.addAttribute(FINAL_PRICE, finalPrice);
             }
         }
