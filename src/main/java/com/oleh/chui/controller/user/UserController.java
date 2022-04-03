@@ -23,6 +23,11 @@ import java.util.List;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all possible actions for user.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor

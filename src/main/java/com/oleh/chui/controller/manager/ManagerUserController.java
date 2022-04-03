@@ -17,6 +17,11 @@ import java.util.List;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all possible actions for manager with user.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(UriPath.MANAGER_PREFIX)

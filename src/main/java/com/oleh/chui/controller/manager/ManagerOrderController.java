@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all possible actions for manager with orders.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor

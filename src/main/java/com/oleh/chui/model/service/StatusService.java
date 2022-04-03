@@ -5,6 +5,11 @@ import com.oleh.chui.model.repository.StatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Manager business logic related with Status.
+ *
+ * @author Oleh Chui
+ */
 @Service
 @RequiredArgsConstructor
 public class StatusService {

@@ -20,6 +20,11 @@ import java.math.BigDecimal;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all interactions with TourDetails page.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @RequiredArgsConstructor
 public class TourDetailsController {

@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all possible actions for admin with users.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor
@@ -19,6 +24,13 @@ public class AdminUserController {
 
     private final UserService userService;
 
+    /**
+     * Block or unblock user by id based on active blocking state.
+     *
+     * @param userId Long representing id of User.
+     * @param isBlocked boolean representing active blocking state of selected user.
+     * @return String representing Uri path to usersPage.
+     */
     @PostMapping(UriPath.USERS)
     public String blockOrUnblockUser(@RequestParam(name = ID) Long userId,
                                      @RequestParam(name = IS_BLOCKED) boolean isBlocked) {

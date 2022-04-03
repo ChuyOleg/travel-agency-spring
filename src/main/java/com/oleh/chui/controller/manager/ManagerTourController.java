@@ -17,6 +17,11 @@ import javax.validation.Valid;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all possible actions for manager with tour.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor

@@ -20,6 +20,11 @@ import java.util.Arrays;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+/**
+ * Contains all interactions with Catalog page.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @RequiredArgsConstructor
 @Log4j2

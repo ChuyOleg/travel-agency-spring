@@ -25,6 +25,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Manages business logic related with Tour.
+ *
+ * @author Oleh Chui
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -51,6 +56,16 @@ public class TourService {
         return tourRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    /**
+     * Checks if name of the tour is free and country and city are existed.
+     * Creates Tour from TourDto.
+     * Invokes method for creating Tour in DAO layer.
+     *
+     * @param tourDto TourDto instance.
+     * @throws TourNameIsReservedException Indicates that name of the tour is reserved.
+     * @throws CityNotExistException Indicates that city of the tour does not exist.
+     * @throws CountryNotExistException Indicates that country of the tour does not exist.
+     */
     @Transactional()
     public void create(TourDto tourDto) throws TourNameIsReservedException, CityNotExistException, CountryNotExistException {
         checkTourNameIsReserved(tourDto.getName());
@@ -65,6 +80,14 @@ public class TourService {
         log.info("New tour '{}' has been created", tour);
     }
 
+    /**
+     * Process updating Tour information.
+     *
+     * @param tourDto TourDto that contains updated information.
+     * @param id Long representing id of Tour that should be updated.
+     * @throws CityNotExistException Indicates that city of the tour does not exist.
+     * @throws CountryNotExistException Indicates that country of the tour does not exist.
+     */
     @Transactional()
     public void update(TourDto tourDto, Long id) throws CityNotExistException, CountryNotExistException {
         countryService.checkCountryAndCityExist(tourDto.getCountry(), tourDto.getCity());

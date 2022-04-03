@@ -17,6 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Manages business logic related with User.
+ *
+ * @author Oleh Chui
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -41,6 +46,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
+    /**
+     * Process creating new user account.
+     *
+     * @param userDto UserDto instance.
+     * @throws UsernameIsReservedException Indicates that username is reserved.
+     */
     @Transactional()
     public void registerNewAccount(UserDto userDto) throws UsernameIsReservedException {
         checkUsernameIsUnique(userDto.getUsername());

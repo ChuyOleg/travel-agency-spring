@@ -5,6 +5,11 @@ import com.oleh.chui.model.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Manager business logic related with Role.
+ *
+ * @author Oleh Chui
+ */
 @Service
 @RequiredArgsConstructor
 public class RoleService {

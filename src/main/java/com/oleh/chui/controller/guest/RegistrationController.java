@@ -18,6 +18,11 @@ import javax.validation.Valid;
 import static com.oleh.chui.controller.util.Attribute.*;
 import static com.oleh.chui.model.dto.message.UserValidErrorMessage.*;
 
+/**
+ * Manages of registration process.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor

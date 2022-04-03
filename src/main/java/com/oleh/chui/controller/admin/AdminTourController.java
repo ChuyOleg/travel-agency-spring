@@ -21,6 +21,12 @@ import javax.validation.Valid;
 
 import static com.oleh.chui.controller.util.Attribute.*;
 
+
+/**
+ * Contains all possible actions for admin with tour.
+ *
+ * @author Oleh Chui
+ */
 @Controller
 @Log4j2
 @RequiredArgsConstructor
@@ -30,6 +36,10 @@ public class AdminTourController {
     private final TourService tourService;
     private final OrderService orderService;
 
+    /**
+     * @param model Model instance.
+     * @return String representing path to createTourPage.html.
+     */
     @GetMapping(UriPath.TOUR_CREATE)
     public String getCreateTourPage(Model model) {
         model.addAttribute(TOUR_DTO, new TourDto());
@@ -38,6 +48,12 @@ public class AdminTourController {
         return HtmlPagePath.ADMIN_CREATE_TOUR_PAGE;
     }
 
+    /**
+     * @param tourDto TourDto instance from Thymeleaf.
+     * @param validationResult BindingResult instance representing result of validation tourDto.
+     * @param model Model instance.
+     * @return String representing Uri path to Catalog page if success or path to createTourPage.html if errors.
+     */
     @PostMapping(UriPath.TOUR_CREATE)
     public String createTour(@ModelAttribute(name = TOUR_DTO) @Valid TourDto tourDto,
                              BindingResult validationResult,
@@ -69,6 +85,11 @@ public class AdminTourController {
         return HtmlPagePath.ADMIN_CREATE_TOUR_PAGE;
     }
 
+    /**
+     * @param id Long representing id of selected tour.
+     * @param model Model instance.
+     * @return String representing path to updateTourPage.html.
+     */
     @GetMapping(UriPath.TOUR + UriPath.PATH_VARIABLE_ID)
     public String getUpdateTourPage(@PathVariable(name = UriPath.ID) Long id, Model model) {
         TourDto tourDto = new TourDto(tourService.getById(id));
@@ -80,6 +101,13 @@ public class AdminTourController {
         return HtmlPagePath.ADMIN_UPDATE_TOUR_PAGE;
     }
 
+    /**
+     * @param id Long representing id of tour.
+     * @param tourDto TourDto instance.
+     * @param validationResult BindingResult instance.
+     * @param model Model instance.
+     * @return String: UriPath to Catalog page if success | path to updateTourPage.html if errors.
+     */
     @PostMapping(UriPath.TOUR_UPDATE + UriPath.PATH_VARIABLE_ID)
     public String updateTour(@PathVariable(name = UriPath.ID) Long id,
                              @ModelAttribute(name = TOUR_DTO) @Valid TourDto tourDto,
@@ -107,6 +135,10 @@ public class AdminTourController {
         return HtmlPagePath.ADMIN_UPDATE_TOUR_PAGE;
     }
 
+    /**
+     * @param tourId Long representing id of Tour.
+     * @return String: Uri path to Catalog page if success | Uri path to tourDetails page if errors.
+     */
     @PostMapping(UriPath.TOUR_DELETE)
     public String deleteTour(@RequestParam Long tourId) {
         boolean tourIsAlreadyBought = orderService.isExistedByTourId(tourId);

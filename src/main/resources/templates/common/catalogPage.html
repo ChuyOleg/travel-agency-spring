@@ -92,7 +92,8 @@
                 <ul class="pagination-list text-center justify-content-center">
                     <li><button type="button" th:disabled="${activePageNumber <= 1}" class="btn btn-primary" id="prevPageButton"><</button> </li>
 
-                    <li th:value="${activePageNumber}" class="pageNumber" id="pageNumber" th:text="${activePageNumber}"></li>
+                    <li th:value="${activePageNumber}" class="activePageNumber" id="pageNumber" th:text="${activePageNumber}"></li>
+                    <li th:if="${activePageNumber < pagesNumber}" class="limitPageNumber" th:text="${pagesNumber}"></li>
 
                     <li><button type="button" th:disabled="${activePageNumber >= pagesNumber}" class="btn btn-primary" id="nextPageButton">></button> </li>
                 </ul>

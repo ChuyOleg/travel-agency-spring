@@ -16,6 +16,11 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Manages business logic related with Order.
+ *
+ * @author Oleh Chui
+ */
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -28,6 +33,12 @@ public class OrderService {
     private final StatusService statusService;
     private final OrderRepository orderRepository;
 
+    /**
+     * Process creating Order.
+     *
+     * @param userId Long representing id of selected User.
+     * @param tourId Long representing id of selected Tour.
+     */
     @Transactional()
     public void createOrder(Long userId, Long tourId) {
         User user = User.builder().id(userId).build();
@@ -60,6 +71,12 @@ public class OrderService {
         return orderRepository.existsByTourId(tourId);
     }
 
+    /**
+     * Process changing status of the Order to the opposite.
+     *
+     * @param newStatus String representing new status of Order.
+     * @param orderId Long representing id of selected Order.
+     */
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void changeStatus(String newStatus, Long orderId) {
         Order order = orderRepository.getById(orderId);
@@ -72,6 +89,17 @@ public class OrderService {
         log.info("Status of order (id = {}) has been changed to <{}>", orderId, newStatus);
     }
 
+    /**
+     * Calculates FINAL_PRICE based on formula:
+     * FINAL_DISCOUNT = DISCOUNT_STEP * ORDERS_COUNT.
+     * FINAL_DISCOUNT = TOUR_MAX_DISCOUNT if FINAL_DISCOUNT > TOUR_MAX_DISCOUNT
+     *
+     * FINAL_PRICE = TOUR_PRICE * (100 - FINAL_DISCOUNT) / 100.
+     *
+     * @param userId Long representing id of selected User.
+     * @param tourId Long representing id of selected Tour.
+     * @return BigDecimal representing final price.
+     */
     @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
     public BigDecimal calculateFinalPrice(Long userId, Long tourId) {
         int ordersCount = orderRepository.countByUserId(userId);
