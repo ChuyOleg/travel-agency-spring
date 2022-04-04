@@ -1,7 +1,7 @@
 version: "3"
 services:
   app:
-    build: .
+    image: chui9591/travel_agency_spring:latest
     ports:
       - "8080:8080"
     depends_on:
